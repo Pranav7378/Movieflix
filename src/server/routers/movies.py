@@ -1,10 +1,11 @@
 from typing import Any
+import uuid
 
 from fastapi import APIRouter, Depends, HTTPException, Query
 from sqlalchemy import desc, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
-from ..db.models import HistoryItem
+from ..db.models import ContentIdentifier, ContentItem, User, UserContentInteraction
 from ..db.postgres import get_db
 from ..services.ml_service import ml_service
 from ..services.movie_service import get_movie, get_movies
@@ -12,7 +13,7 @@ from ..services.omdb_service import search_movies
 
 router = APIRouter(prefix="/api", tags=["movies"])
 
-# Curated IMDb IDs. Results are cached in Postgres after the first request, so
+# Curated IMDb IDs. Results are cached in ContentItems after the first request, so
 # these external calls only happen once per movie.
 TRENDING_IMDB_IDS = [
     "tt0111161",  # The Shawshank Redemption
@@ -48,13 +49,13 @@ def _top_rated(db: Session) -> list[dict[str, Any]]:
 
 @router.get("/trending")
 def get_trending(db: Session = Depends(get_db)) -> list[dict[str, Any]]:
-    """Get trending movies (cached)."""
+    """Get trending movies."""
     return _trending(db)
 
 
 @router.get("/top-rated")
 def get_top_rated(db: Session = Depends(get_db)) -> list[dict[str, Any]]:
-    """Get top-rated movies (cached)."""
+    """Get top-rated movies."""
     return _top_rated(db)
 
 
@@ -86,11 +87,7 @@ def filter_movies(
     year: str | None = Query(None),
     type: str | None = Query(None),
 ) -> list[dict[str, Any]]:
-    """Lightweight filter on top of OMDB text search.
-
-    OMDB has no true genre browse endpoint, so this searches the genre keyword
-    and applies local filters. Kept for the current UI.
-    """
+    """Lightweight filter on top of OMDB text search."""
     if not genre:
         return []
 
@@ -122,33 +119,78 @@ def get_personalized_recommendations(
     user_id: str,
     db: Session = Depends(get_db),
 ) -> list[dict[str, Any]]:
-    """Recommendations based on the user's most recently watched movie."""
-    recent = list(
-        db.scalars(
-            select(HistoryItem)
-            .where(HistoryItem.user_id == user_id)
-            .order_by(desc(HistoryItem.last_watched))
-            .limit(3)
-        ).all()
-    )
+    """Recommendations based on user's watched titles, strictly excluding watched and dismissed content."""
+    # Find user by firebase_uid or id
+    user = db.scalar(select(User).where((User.firebase_uid == user_id) | (User.id == user_id if _is_uuid(user_id) else False)))
 
-    if not recent:
+    if not user:
         return _trending(db)
 
-    watched_ids = set(
+    # 1. Fetch recent watched interactions
+    recent_watched = list(
         db.scalars(
-            select(HistoryItem.imdb_id).where(HistoryItem.user_id == user_id)
+            select(UserContentInteraction)
+            .options(joinedload(UserContentInteraction.content).joinedload(ContentItem.identifiers))
+            .where(
+                UserContentInteraction.user_id == user.id,
+                UserContentInteraction.watched_at.isnot(None),
+            )
+            .order_by(desc(UserContentInteraction.watched_at))
+            .limit(5)
         ).all()
     )
 
-    similar = ml_service.get_similar_movies_by_imdb(recent[0].imdb_id, limit=30)
+    if not recent_watched:
+        return _trending(db)
+
+    # 2. Get excluded IMDb IDs (watched or dismissed)
+    excluded_interactions = list(
+        db.scalars(
+            select(UserContentInteraction)
+            .options(joinedload(UserContentInteraction.content).joinedload(ContentItem.identifiers))
+            .where(
+                UserContentInteraction.user_id == user.id,
+                (UserContentInteraction.watched_at.isnot(None)) | (UserContentInteraction.is_dismissed.is_(True)),
+            )
+        ).all()
+    )
+    excluded_imdb_ids: set[str] = set()
+    for inter in excluded_interactions:
+        if inter.content and inter.content.identifiers:
+            for ident in inter.content.identifiers:
+                if ident.provider == "imdb":
+                    excluded_imdb_ids.add(ident.external_id)
+
+    # Find anchor IMDb ID from most recent watched title
+    anchor_imdb_id = None
+    for inter in recent_watched:
+        if inter.content and inter.content.identifiers:
+            for ident in inter.content.identifiers:
+                if ident.provider == "imdb":
+                    anchor_imdb_id = ident.external_id
+                    break
+        if anchor_imdb_id:
+            break
+
+    if not anchor_imdb_id:
+        return _trending(db)
+
+    similar = ml_service.get_similar_movies_by_imdb(anchor_imdb_id, limit=40)
     candidate_ids = [
         movie["imdb_id"]
         for movie in similar
-        if movie["imdb_id"] not in watched_ids
+        if movie["imdb_id"] not in excluded_imdb_ids
     ]
     recommendations = _enrich_movie_ids(db, candidate_ids, limit=10)
     return recommendations or _trending(db)
+
+
+def _is_uuid(val: str) -> bool:
+    try:
+        uuid.UUID(val)
+        return True
+    except Exception:
+        return False
 
 
 @router.get("/recommendations/{imdb_id}")

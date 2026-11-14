@@ -1,21 +1,51 @@
+from decimal import Decimal
+import re
+from typing import Any, Optional
+import uuid
+
+from sqlalchemy import select
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 
 from ..config import settings
-from ..db.models import MovieCache
+from ..db.models import ContentIdentifier, ContentItem
 from .omdb_service import fetch_movie_by_imdb
 from .youtube_service import search_movie_trailer
 
 
-def get_cached_movie(db: Session, imdb_id: str) -> dict | None:
-    row = db.get(MovieCache, imdb_id)
-    if row is None:
+def _parse_int(val: Any) -> Optional[int]:
+    if not val or val == "N/A":
+        return None
+    match = re.search(r"\d+", str(val).replace(",", ""))
+    return int(match.group()) if match else None
+
+
+def _parse_decimal(val: Any) -> Optional[Decimal]:
+    if not val or val == "N/A":
+        return None
+    try:
+        return Decimal(str(val))
+    except Exception:
         return None
 
-    data = dict(row.payload)
-    if row.trailer_url:
-        data["trailer_url"] = row.trailer_url
-    return data
+
+def _content_to_movie_dict(item: ContentItem, imdb_id: str, trailer_url: Optional[str] = None) -> dict[str, Any]:
+    runtime_str = f"{item.runtime_minutes} min" if item.runtime_minutes else "N/A"
+    return {
+        "id": str(item.id),
+        "content_id": str(item.id),
+        "imdbID": imdb_id,
+        "Title": item.title,
+        "Year": str(item.release_year) if item.release_year else "N/A",
+        "Poster": item.poster_path or "N/A",
+        "Plot": item.overview or "N/A",
+        "Runtime": runtime_str,
+        "imdbRating": str(item.imdb_rating) if item.imdb_rating else "N/A",
+        "Type": item.content_type,
+        "visual_format": item.visual_format,
+        "is_anime": item.is_anime,
+        "trailer_url": trailer_url,
+    }
 
 
 def get_movie(
@@ -24,65 +54,72 @@ def get_movie(
     *,
     with_trailer: bool = False,
 ) -> dict | None:
-    """Return a movie, fetching OMDB/YouTube at most once and caching the result.
+    """Return a movie from universal ContentItem, fetching OMDB/YouTube at most once."""
+    # 1. Look up existing ContentItem via ContentIdentifier
+    stmt = (
+        select(ContentItem)
+        .join(ContentIdentifier, ContentIdentifier.content_id == ContentItem.id)
+        .where(
+            ContentIdentifier.provider == "imdb",
+            ContentIdentifier.external_id == imdb_id,
+        )
+    )
+    item = db.scalar(stmt)
 
-    A cached row is always served immediately; trailers are only looked up when
-    requested and when we have not already attempted the lookup.
-    """
-    row = db.get(MovieCache, imdb_id)
+    if item is not None:
+        trailer_url = None
+        if with_trailer and settings.ENABLE_TRAILERS and settings.YOUTUBE_API_KEY:
+            trailer_url = search_movie_trailer(item.title, str(item.release_year or ""))
+        return _content_to_movie_dict(item, imdb_id, trailer_url)
 
-    if row is not None:
-        data = dict(row.payload)
-
-        if (
-            with_trailer
-            and settings.ENABLE_TRAILERS
-            and settings.YOUTUBE_API_KEY
-            and not row.trailer_checked
-        ):
-            trailer = search_movie_trailer(data.get("Title", ""), data.get("Year", ""))
-            row.trailer_checked = True
-            if trailer:
-                row.trailer_url = trailer
-            db.commit()
-
-        if row.trailer_url:
-            data["trailer_url"] = row.trailer_url
-        return data
-
+    # 2. Fetch fresh data from OMDB API
     data = fetch_movie_by_imdb(imdb_id)
     if data is None:
         return None
 
-    trailer = None
-    trailer_checked = False
+    trailer_url = None
     if with_trailer and settings.ENABLE_TRAILERS and settings.YOUTUBE_API_KEY:
-        trailer = search_movie_trailer(data.get("Title", ""), data.get("Year", ""))
-        trailer_checked = True
+        trailer_url = search_movie_trailer(data.get("Title", ""), data.get("Year", ""))
 
-    row = MovieCache(
-        imdb_id=imdb_id,
-        title=data.get("Title"),
-        payload=data,
-        trailer_url=trailer,
-        trailer_checked=trailer_checked,
+    content_type = "series" if data.get("Type") == "series" else "movie"
+    genre_str = data.get("Genre", "").lower()
+    country_str = data.get("Country", "").lower()
+    visual_format = "animation" if "animation" in genre_str else "live_action"
+    is_anime = ("japan" in country_str and "animation" in genre_str) or ("anime" in genre_str)
+
+    item = ContentItem(
+        id=uuid.uuid4(),
+        content_type=content_type,
+        visual_format=visual_format,
+        is_anime=is_anime,
+        title=data.get("Title") or "Untitled",
+        overview=data.get("Plot"),
+        poster_path=data.get("Poster"),
+        release_year=_parse_int(data.get("Year")),
+        runtime_minutes=_parse_int(data.get("Runtime")),
+        imdb_rating=_parse_decimal(data.get("imdbRating")),
+        imdb_vote_count=_parse_int(data.get("imdbVotes")) or 0,
     )
-    db.add(row)
+    db.add(item)
+    db.flush()
+
+    ident = ContentIdentifier(
+        content_id=item.id,
+        provider="imdb",
+        external_id=imdb_id,
+    )
+    db.add(ident)
+
     try:
         db.commit()
+        db.refresh(item)
     except IntegrityError:
-        # Another request cached this movie first; use the stored copy.
         db.rollback()
-        cached = db.get(MovieCache, imdb_id)
-        if cached is not None:
-            data = dict(cached.payload)
-            if cached.trailer_url:
-                data["trailer_url"] = cached.trailer_url
-            return data
+        item = db.scalar(stmt)
+        if item is None:
+            return None
 
-    if trailer:
-        data["trailer_url"] = trailer
-    return data
+    return _content_to_movie_dict(item, imdb_id, trailer_url)
 
 
 def get_movies(

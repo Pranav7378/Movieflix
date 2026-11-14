@@ -7,15 +7,23 @@ import pytest
 TEST_DB = Path(tempfile.gettempdir()) / "movieflix_test.db"
 os.environ["DATABASE_URL"] = f"sqlite:///{TEST_DB.as_posix()}"
 os.environ["ENABLE_TRAILERS"] = "false"
+os.environ["CINECUE_TEST_MODE"] = "true"
+os.environ["CINECUE_OWNER_UID"] = "user-1"
+
+from src.server.config import settings
+settings.CINECUE_TEST_MODE = True
+settings.CINECUE_OWNER_UID = "user-1"
 
 from fastapi.testclient import TestClient  # noqa: E402
 from sqlalchemy import delete  # noqa: E402
 
-from src.server.db.models import HistoryItem, WatchlistItem  # noqa: E402
+from src.server.db.models import ContentIdentifier, ContentItem, User, UserContentInteraction  # noqa: E402
 from src.server.db.postgres import Base, SessionLocal, engine  # noqa: E402
 from src.server.main import app  # noqa: E402
 from src.server.services import movie_service  # noqa: E402
 from src.server.services.ml_service import ml_service  # noqa: E402
+
+AUTH_HEADER = {"Authorization": "Bearer test-token-user-1"}
 
 
 def fake_movie(imdb_id: str, title: str = "Test Movie") -> dict:
@@ -31,14 +39,16 @@ def fake_movie(imdb_id: str, title: str = "Test Movie") -> dict:
 
 @pytest.fixture(autouse=True)
 def clean_db():
-    Base.metadata.drop_all(bind=engine)
+    settings.CINECUE_TEST_MODE = True
+    settings.CINECUE_OWNER_UID = "user-1"
     Base.metadata.create_all(bind=engine)
     with SessionLocal() as db:
-        db.execute(delete(WatchlistItem))
-        db.execute(delete(HistoryItem))
+        db.execute(delete(UserContentInteraction))
+        db.execute(delete(ContentIdentifier))
+        db.execute(delete(ContentItem))
+        db.execute(delete(User))
         db.commit()
     yield
-    Base.metadata.drop_all(bind=engine)
 
 
 @pytest.fixture
@@ -64,21 +74,21 @@ def test_health(client):
 def test_watchlist_roundtrip(client, mock_omdb):
     payload = {"user_id": "user-1", "imdb_id": "tt0000001", "movie_title": "Test Movie"}
 
-    added = client.post("/api/watchlist", json=payload)
+    added = client.post("/api/watchlist", json=payload, headers=AUTH_HEADER)
     assert added.status_code == 200
     assert added.json()["imdbID"] == "tt0000001"
 
-    listed = client.get("/api/watchlist/user-1")
+    listed = client.get("/api/watchlist/user-1", headers=AUTH_HEADER)
     assert listed.status_code == 200
     assert len(listed.json()) == 1
     assert listed.json()[0]["Title"] == "Test Movie"
 
-    removed = client.delete("/api/watchlist/user-1/tt0000001")
+    removed = client.delete("/api/watchlist/user-1/tt0000001", headers=AUTH_HEADER)
     assert removed.status_code == 200
-    assert client.get("/api/watchlist/user-1").json() == []
+    assert client.get("/api/watchlist/user-1", headers=AUTH_HEADER).json() == []
 
 
-def test_continue_watching(client, mock_omdb):
+def test_history_roundtrip(client, mock_omdb):
     response = client.post(
         "/api/history",
         json={
@@ -86,14 +96,16 @@ def test_continue_watching(client, mock_omdb):
             "imdb_id": "tt0000002",
             "movie_title": "Half Watched",
             "progress": 50,
+            "rating": 4.5,
         },
+        headers=AUTH_HEADER,
     )
     assert response.status_code == 200
 
-    continue_watching = client.get("/api/continue-watching/user-1")
-    assert continue_watching.status_code == 200
-    assert len(continue_watching.json()) == 1
-    assert continue_watching.json()[0]["progress"] == 50
+    history = client.get("/api/history/user-1", headers=AUTH_HEADER)
+    assert history.status_code == 200
+    assert len(history.json()) == 1
+    assert history.json()[0]["movie_title"] == "Half Watched"
 
 
 def test_imdb_mapping_loaded():
@@ -107,7 +119,6 @@ def test_more_like_this(client, mock_omdb):
 
 
 def test_personalized_route_is_not_shadowed(client, mock_omdb):
-    # /recommendations/{imdb_id} must not swallow /recommendations/personalized/...
     response = client.get("/api/recommendations/personalized/user-1")
     assert response.status_code == 200
     assert len(response.json()) == 10

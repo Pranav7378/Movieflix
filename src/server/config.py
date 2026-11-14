@@ -12,6 +12,11 @@ class Settings(BaseSettings):
     YOUTUBE_API_KEY: str = ""
     ENABLE_TRAILERS: bool = True
 
+    # Single-User Owner Authentication (Firebase)
+    CINECUE_OWNER_UID: str = ""
+    FIREBASE_SERVICE_ACCOUNT_JSON: str = ""
+    CINECUE_TEST_MODE: bool = False
+
     # Database. Postgres in production (Neon, Supabase, Railway, ...).
     # SQLite is used as a zero-setup local fallback when DATABASE_URL is unset.
     DATABASE_URL: str = f"sqlite:///{(BASE_DIR / 'movieflix.db').as_posix()}"
