@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { FaStar, FaBookmark, FaCheck, FaInfoCircle, FaCheckCircle } from 'react-icons/fa';
+import { FaStar, FaBookmark, FaCheck, FaCheckCircle } from 'react-icons/fa';
 import { Movie } from '../types';
 import { useAppDispatch, useAppSelector } from '../app/hooks';
 import { addToWatchlist, removeFromWatchlist } from '../features/watchlist/watchlistSlice';
@@ -29,6 +29,9 @@ const MovieCard: React.FC<MovieCardProps> = ({
 
     const isInWatchlist = watchlist.some((item) => item.imdbID === movie.imdbID);
     const isWatched = historyItems.some((item) => item.imdb_id === movie.imdbID);
+
+    // Calculate a dynamic display match score if not passed
+    const calculatedScore = matchScore || Math.min(99, Math.max(76, Math.round(((parseFloat(movie.imdbRating || '7.5') * 10) + 12))));
 
     const handleCardClick = () => {
         navigate(`/movie/${movie.imdbID}`);
@@ -77,10 +80,13 @@ const MovieCard: React.FC<MovieCardProps> = ({
     return (
         <div 
             onClick={handleCardClick}
-            className="group relative flex-shrink-0 w-44 sm:w-48 md:w-52 cursor-pointer select-none"
+            className="group relative flex-shrink-0 w-44 sm:w-48 md:w-52 cursor-pointer select-none transition-all duration-300"
         >
-            {/* Card Body */}
-            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-xl bg-cinecue-surface border border-cinecue-border/70 group-hover:border-cinecue-amber/70 group-hover:shadow-amber-glow transition-all duration-300">
+            {/* Ambient Bloom Glowing Backlight */}
+            <div className="absolute -inset-1.5 rounded-2xl bg-gradient-to-tr from-cyan-500/20 via-violet-500/20 to-fuchsia-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 pointer-events-none" />
+
+            {/* Poster Card Container */}
+            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-2xl bg-[#0D1017] border border-white/10 dark:border-white/10 group-hover:border-cyan-400/50 shadow-[0_10px_25px_rgba(0,0,0,0.5)] transition-all duration-300">
                 {/* Poster Image */}
                 <img
                     src={posterUrl}
@@ -90,85 +96,78 @@ const MovieCard: React.FC<MovieCardProps> = ({
                     className="h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-105"
                 />
 
-                {/* Match Score Badge (Optional AI Badge) */}
-                {showMatchBadge && matchScore && (
-                    <div className="absolute top-2.5 left-2.5 z-10 px-2 py-0.5 rounded-md text-[11px] font-semibold bg-[#101114]/90 text-cinecue-amber border border-cinecue-amber/40 shadow-sm backdrop-blur-sm">
-                        {matchScore}% Match
+                {/* Glass Vignette & Highlight */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#07080B] via-transparent to-black/30 opacity-70 group-hover:opacity-85 transition-opacity" />
+
+                {/* Top-Left: Radial Match Dial or Glowing AI Capsule */}
+                {(showMatchBadge || matchScore) && (
+                    <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full backdrop-blur-md bg-[#07080B]/80 border border-cyan-400/40 shadow-glow-cyan">
+                        <div className="relative w-3.5 h-3.5 flex items-center justify-center">
+                            <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
+                        </div>
+                        <span className="text-[11px] font-bold text-cyan-300 tracking-tight">
+                            {calculatedScore}% Match
+                        </span>
                     </div>
                 )}
 
-                {/* Quick Action Buttons (Top Right) */}
-                <div className="absolute top-2.5 right-2.5 z-10 flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                {/* Top-Right: Quick Action Buttons */}
+                <div className="absolute top-2.5 right-2.5 z-10 flex flex-col gap-1.5 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                     <button
                         onClick={handleWatchlistToggle}
-                        title={isInWatchlist ? "Remove from Watchlist" : "Add to Watchlist"}
-                        className={`w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-md transition-all shadow-md ${
+                        aria-label={isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'}
+                        className={`w-8 h-8 rounded-full backdrop-blur-md flex items-center justify-center text-xs transition-transform hover:scale-110 shadow-lg ${
                             isInWatchlist
-                                ? 'bg-cinecue-amber text-[#101114]'
-                                : 'bg-black/70 text-white hover:bg-cinecue-amber hover:text-[#101114]'
+                                ? 'bg-amber-500 text-[#07080B] shadow-glow-amber'
+                                : 'bg-[#07080B]/80 text-white border border-white/20 hover:border-amber-400 hover:text-amber-400'
                         }`}
                     >
                         {isInWatchlist ? <FaCheck /> : <FaBookmark />}
                     </button>
+
                     <button
                         onClick={handleMarkWatched}
-                        title={isWatched ? "Watched" : "Mark as Watched"}
-                        className={`w-7 h-7 rounded-full flex items-center justify-center text-xs backdrop-blur-md transition-all shadow-md ${
+                        aria-label={isWatched ? 'Watched' : 'Mark as Watched'}
+                        className={`w-8 h-8 rounded-full backdrop-blur-md flex items-center justify-center text-xs transition-transform hover:scale-110 shadow-lg ${
                             isWatched
-                                ? 'bg-emerald-500 text-white'
-                                : 'bg-black/70 text-white hover:bg-emerald-500'
+                                ? 'bg-emerald-500 text-white shadow-glow-emerald'
+                                : 'bg-[#07080B]/80 text-white border border-white/20 hover:border-emerald-400 hover:text-emerald-400'
                         }`}
                     >
-                        <FaCheckCircle />
+                        {isWatched ? <FaCheckCircle /> : <FaCheck />}
                     </button>
                 </div>
 
-                {/* Dark Vignette Overlay on Hover */}
-                <div className="absolute inset-0 bg-gradient-to-t from-[#101114] via-[#101114]/70 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-3.5">
-                    <p className="text-white text-xs font-semibold leading-tight line-clamp-2 mb-1">
-                        {movie.Title}
-                    </p>
-
-                    <div className="flex items-center justify-between text-[11px] text-cinecue-muted mb-2">
-                        <span>{movie.Year}</span>
+                {/* Bottom Overlay Info on Poster */}
+                <div className="absolute bottom-0 inset-x-0 p-3 z-10 flex flex-col justify-end">
+                    <div className="flex items-center gap-1.5 text-xs text-slate-300 mb-1">
                         {movie.imdbRating && movie.imdbRating !== 'N/A' && (
-                            <span className="flex items-center gap-1 text-cinecue-amber font-medium">
+                            <span className="flex items-center gap-1 text-amber-400 font-semibold">
                                 <FaStar className="text-[10px]" />
                                 {movie.imdbRating}
                             </span>
                         )}
+                        {movie.Year && (
+                            <span className="text-slate-400 text-[11px] before:content-['•'] before:mr-1">
+                                {movie.Year}
+                            </span>
+                        )}
                     </div>
-
-                    {movie.Genre && (
-                        <p className="text-[10px] text-cinecue-muted-dark line-clamp-1 mb-2">
-                            {movie.Genre}
-                        </p>
-                    )}
-
-                    <div className="flex items-center gap-2 pt-1 border-t border-cinecue-border/60">
-                        <span className="text-[11px] font-medium text-cinecue-amber flex items-center gap-1 group-hover:underline">
-                            <FaInfoCircle className="text-[10px]" />
-                            View Details
-                        </span>
-                    </div>
+                    <h3 className="font-semibold text-white text-sm line-clamp-1 group-hover:text-cyan-300 transition-colors">
+                        {movie.Title}
+                    </h3>
                 </div>
             </div>
 
-            {/* Static Title & Subtitle Below Poster (Visible always) */}
-            <div className="mt-2.5 px-0.5">
-                <h3 className="text-sm font-medium text-cinecue-text truncate group-hover:text-cinecue-amber transition-colors">
-                    {movie.Title}
-                </h3>
-                <div className="flex items-center justify-between text-xs text-cinecue-muted mt-0.5">
-                    <span>{movie.Year || 'Film'}</span>
-                    {movie.imdbRating && movie.imdbRating !== 'N/A' ? (
-                        <span className="flex items-center gap-1 text-cinecue-amber text-xs font-semibold">
-                            <FaStar className="text-[10px]" />
-                            {movie.imdbRating}
-                        </span>
-                    ) : (
-                        <span className="text-[11px] text-cinecue-muted-dark">CINECUE</span>
-                    )}
+            {/* Sub-card details */}
+            <div className="mt-2 px-1">
+                <div className="flex items-center justify-between text-xs text-slate-400">
+                    <span className="truncate max-w-[130px] text-[11px] text-slate-400">
+                        {movie.Genre ? movie.Genre.split(',')[0] : 'Feature Film'}
+                    </span>
+                    <span className="text-[10px] uppercase tracking-wider text-slate-500 font-medium">
+                        {movie.Runtime && movie.Runtime !== 'N/A' ? movie.Runtime : '2h'}
+                    </span>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { FaMagic, FaHistory } from 'react-icons/fa';
+import { FaMagic, FaHistory, FaBolt, FaCompass } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 import MovieCard from '../components/MovieCard';
@@ -14,7 +14,16 @@ const AI_PROMPTS = [
     "Emotional movies that leave a lasting impression",
     "Movies similar to Interstellar and Inception",
     "Telugu thrillers with exceptional screenplays",
-    "Dark neo-noir crime dramas",
+    "Dark atmospheric neo-noir crime dramas",
+];
+
+const VIBE_CHIPS = [
+    { label: "Cosmic", query: "epic cosmic space sci-fi exploration" },
+    { label: "Mind-Bending", query: "mind-bending philosophical thrillers" },
+    { label: "Neo-Noir", query: "atmospheric dark neo-noir detective mystery" },
+    { label: "High Stakes", query: "intense high stakes survival thriller" },
+    { label: "Emotional", query: "deep emotional drama with unforgettable characters" },
+    { label: "Cyberpunk", query: "futuristic cyberpunk noir aesthetic" },
 ];
 
 const AIDiscoveryPage: React.FC = () => {
@@ -48,7 +57,6 @@ const AIDiscoveryPage: React.FC = () => {
         });
 
         try {
-            // Check if query targets a known film reference (e.g. "similar to Interstellar")
             const lower = searchPrompt.toLowerCase();
             let targetMovieTitle = '';
             if (lower.includes('similar to')) {
@@ -61,21 +69,17 @@ const AIDiscoveryPage: React.FC = () => {
             let generatedExplanation = '';
 
             if (targetMovieTitle) {
-                // Search for the seed movie first to get its IMDb ID
                 const searchRes = await apiClient.get('/api/search', { params: { query: targetMovieTitle } });
                 const seedList = searchRes.data?.Search || searchRes.data || [];
                 if (seedList.length > 0 && seedList[0].imdbID) {
                     const seedImdb = seedList[0].imdbID;
-                    // Run content-based ML recommendation service
                     const recRes = await apiClient.get(`/api/recommendations/${seedImdb}`);
                     moviesFound = recRes.data || [];
-                    generatedExplanation = `Calculated content similarity based on story themes, tone, and character arcs related to "${seedList[0].Title}".`;
+                    generatedExplanation = `Neural content similarity mapped across narrative themes, tone, and character arcs related to "${seedList[0].Title}".`;
                 }
             }
 
-            // Fallback to keyword-based content search if not a direct movie comparison
             if (moviesFound.length === 0) {
-                // Extract primary keyword from prompt
                 const cleanKeyword = searchPrompt
                     .replace(/find me|suggest|movies|movie|with|and|show|good/gi, '')
                     .trim()
@@ -84,7 +88,6 @@ const AIDiscoveryPage: React.FC = () => {
                 const searchRes = await apiClient.get('/api/search', { params: { query: cleanKeyword } });
                 const rawList = searchRes.data?.Search || searchRes.data || [];
                 
-                // If we found a top match, get its ML recommendations as well
                 if (rawList.length > 0 && rawList[0].imdbID) {
                     try {
                         const recRes = await apiClient.get(`/api/recommendations/${rawList[0].imdbID}`);
@@ -100,7 +103,7 @@ const AIDiscoveryPage: React.FC = () => {
                     moviesFound = rawList;
                 }
 
-                generatedExplanation = `Identified thematic matches and plot tags related to "${searchPrompt}". Filtered for high audience and critical resonance.`;
+                generatedExplanation = `Identified thematic matches and plot synopses related to "${searchPrompt}". Filtered for high audience resonance.`;
             }
 
             setResults(moviesFound);
@@ -136,59 +139,73 @@ const AIDiscoveryPage: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#101114] text-white flex flex-col selection:bg-cinecue-amber/30 selection:text-white">
+        <div className="min-h-screen bg-[#07080B] text-slate-100 flex flex-col relative overflow-hidden transition-colors">
+            {/* Ambient Lighting Orbs */}
+            <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-cyan-500/15 blur-[130px] pointer-events-none -z-10" />
+            <div className="absolute top-60 right-1/4 w-[450px] h-[450px] rounded-full bg-violet-600/15 blur-[150px] pointer-events-none -z-10" />
+
             <Navbar />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-1">
                 {/* Header */}
                 <div className="text-center max-w-3xl mx-auto mb-10">
-                    <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cinecue-surface border border-cinecue-amber/30 text-cinecue-amber text-xs font-semibold uppercase tracking-wider mb-4 shadow-sm">
-                        <FaMagic className="text-xs" />
-                        AI Taste & Narrative Engine
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full backdrop-blur-xl bg-white/[0.04] border border-cyan-400/40 text-cyan-300 text-xs font-semibold uppercase tracking-wider mb-4 shadow-glow-cyan">
+                        <FaBolt className="text-xs text-cyan-400" />
+                        AI Synapse Taste Engine
                     </div>
-                    <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight mb-3 font-sans">
-                        Describe What You Want to Watch
+                    <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight mb-3 font-display">
+                        Describe What You Want to Feel
                     </h1>
-                    <p className="text-sm sm:text-base text-cinecue-muted">
-                        Our content-based recommendation model matches your natural language description with story themes, directorial styles, and cinematic tone.
+                    <p className="text-sm sm:text-base text-slate-300 max-w-xl mx-auto leading-relaxed">
+                        Natural language cinema discovery. Our intelligence engine matches your description with plot dynamics, pacing, and emotional depth.
                     </p>
                 </div>
 
                 {/* Natural Language Prompt Input Bar */}
                 <form 
                     onSubmit={handleSubmit}
-                    className="max-w-3xl mx-auto bg-cinecue-surface border border-cinecue-border hover:border-cinecue-amber/60 focus-within:border-cinecue-amber p-2 sm:p-2.5 rounded-2xl shadow-card backdrop-blur-md transition-all mb-6 flex items-center gap-2"
+                    className="max-w-3xl mx-auto backdrop-blur-2xl bg-white/[0.05] border border-white/15 focus-within:border-cyan-400/80 p-2 sm:p-2.5 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.5)] transition-all mb-5 flex items-center gap-2"
                 >
-                    <div className="pl-3 text-cinecue-amber text-base">
+                    <div className="pl-3 text-cyan-400 text-base animate-pulse">
                         <FaMagic />
                     </div>
                     <input
                         type="text"
                         value={query}
                         onChange={(e) => setQuery(e.target.value)}
-                        placeholder="e.g. Find me a mind-bending thriller with an unexpected ending..."
-                        className="bg-transparent border-none text-white placeholder:text-cinecue-muted-dark text-sm sm:text-base focus:outline-none flex-1 py-2 px-1"
+                        placeholder="e.g. Atmospheric sci-fi about loneliness and deep space exploration..."
+                        className="bg-transparent border-none text-white placeholder:text-slate-400 text-sm sm:text-base focus:outline-none flex-1 py-1.5 px-2"
                     />
                     <button
                         type="submit"
                         disabled={loading || !query.trim()}
-                        className="btn btn-primary px-5 sm:px-7 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap"
+                        className="btn-gradient px-5 sm:px-7 py-2.5 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap"
                     >
-                        {loading ? 'Analyzing...' : 'Discover'}
+                        {loading ? 'Synthesizing...' : 'Discover'}
                     </button>
                 </form>
 
-                {/* Prompt Suggestions */}
-                <div className="max-w-3xl mx-auto mb-12">
-                    <p className="text-xs font-semibold text-cinecue-muted-dark uppercase tracking-wider mb-2.5">
-                        Sample Prompts:
-                    </p>
-                    <div className="flex flex-wrap gap-2">
+                {/* Vibe Chips Row */}
+                <div className="max-w-3xl mx-auto mb-6 flex flex-wrap items-center justify-center gap-2">
+                    {VIBE_CHIPS.map((chip, idx) => (
+                        <button
+                            key={idx}
+                            onClick={() => handlePromptSelect(chip.query)}
+                            className="px-3.5 py-1 rounded-full backdrop-blur-md bg-white/[0.03] border border-white/10 text-slate-300 hover:text-cyan-300 hover:border-cyan-400/40 hover:bg-cyan-500/10 text-xs transition-all font-medium"
+                        >
+                            #{chip.label}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Sample Prompt Suggestions */}
+                <div className="max-w-3xl mx-auto mb-10">
+                    <div className="flex flex-wrap gap-2 justify-center">
                         {AI_PROMPTS.map((promptText, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => handlePromptSelect(promptText)}
-                                className="px-3 py-1.5 rounded-xl bg-cinecue-surface/80 border border-cinecue-border text-cinecue-muted hover:text-cinecue-amber hover:border-cinecue-amber/40 text-xs transition text-left"
+                                className="px-3 py-1.5 rounded-xl backdrop-blur-md bg-white/[0.02] border border-white/10 text-slate-400 hover:text-white hover:border-cyan-400/30 text-xs transition"
                             >
                                 {promptText}
                             </button>
@@ -197,15 +214,15 @@ const AIDiscoveryPage: React.FC = () => {
 
                     {/* Search History Chips */}
                     {searchHistory.length > 0 && (
-                        <div className="mt-4 flex flex-wrap items-center gap-2 text-xs">
-                            <span className="text-cinecue-muted-dark flex items-center gap-1">
+                        <div className="mt-4 flex flex-wrap items-center justify-center gap-2 text-xs">
+                            <span className="text-slate-500 flex items-center gap-1">
                                 <FaHistory className="text-[10px]" /> Recent:
                             </span>
                             {searchHistory.map((hist, idx) => (
                                 <button
                                     key={idx}
                                     onClick={() => handlePromptSelect(hist)}
-                                    className="text-cinecue-muted hover:text-white underline underline-offset-4"
+                                    className="text-slate-400 hover:text-cyan-300 underline underline-offset-4"
                                 >
                                     {hist}
                                 </button>
@@ -214,17 +231,17 @@ const AIDiscoveryPage: React.FC = () => {
                     )}
                 </div>
 
-                {/* AI Explanation Banner */}
+                {/* AI Explanation Glass Banner */}
                 {explanation && (
-                    <div className="max-w-4xl mx-auto mb-8 bg-gradient-to-r from-cinecue-surface via-cinecue-surface to-cinecue-bg-secondary border border-cinecue-border p-5 rounded-2xl flex items-start gap-3.5">
-                        <div className="w-8 h-8 rounded-lg bg-cinecue-amber/15 border border-cinecue-amber/30 flex items-center justify-center text-cinecue-amber flex-shrink-0 mt-0.5">
+                    <div className="max-w-4xl mx-auto mb-8 backdrop-blur-2xl bg-white/[0.04] border border-cyan-400/30 p-5 sm:p-6 rounded-2xl flex items-start gap-3.5 shadow-glow-cyan">
+                        <div className="w-8 h-8 rounded-xl bg-cyan-500/20 border border-cyan-400/40 flex items-center justify-center text-cyan-400 flex-shrink-0 mt-0.5">
                             <FaMagic size={14} />
                         </div>
                         <div>
-                            <h3 className="text-xs font-bold text-cinecue-amber uppercase tracking-wider mb-1">
-                                AI Match Analysis
+                            <h3 className="text-xs font-bold text-cyan-400 uppercase tracking-wider mb-1">
+                                CineCue Synapse Match Intelligence
                             </h3>
-                            <p className="text-sm text-cinecue-text leading-relaxed">
+                            <p className="text-sm text-slate-200 leading-relaxed">
                                 {explanation}
                             </p>
                         </div>
@@ -235,20 +252,23 @@ const AIDiscoveryPage: React.FC = () => {
                 <div className="max-w-7xl mx-auto">
                     {loading ? (
                         <div className="py-20 flex flex-col items-center justify-center">
-                            <div className="w-12 h-12 rounded-full border-2 border-cinecue-amber/20 border-t-cinecue-amber animate-spin mb-4" />
-                            <p className="text-cinecue-muted text-sm font-medium">
-                                Analyzing cinema narrative tags and computing similarity scores...
+                            <div className="relative w-12 h-12 flex items-center justify-center mb-4">
+                                <div className="absolute inset-0 rounded-full border-2 border-cyan-400/20 border-t-cyan-400 animate-spin" />
+                                <div className="w-4 h-4 rounded-full bg-gradient-to-tr from-cyan-400 to-violet-500 shadow-glow-cyan animate-pulse" />
+                            </div>
+                            <p className="text-slate-400 text-sm font-medium">
+                                Analyzing cinema narrative themes and computing match scores...
                             </p>
                         </div>
                     ) : results.length > 0 ? (
                         <div>
-                            <div className="flex items-center justify-between mb-6 pb-3 border-b border-cinecue-border">
-                                <h2 className="text-xl font-bold text-white flex items-center gap-2">
-                                    <span className="w-1.5 h-4 rounded-full bg-cinecue-amber inline-block"></span>
-                                    Recommended Matches ({results.length})
+                            <div className="flex items-center justify-between mb-6 pb-3 border-b border-white/10">
+                                <h2 className="text-xl font-bold text-white flex items-center gap-2.5 font-display">
+                                    <span className="w-1.5 h-5 rounded-full bg-gradient-to-b from-cyan-400 to-violet-500 shadow-glow-cyan inline-block" />
+                                    Synapse Recommendations ({results.length})
                                 </h2>
-                                <span className="text-xs text-cinecue-muted">
-                                    Content-based TF-IDF Model
+                                <span className="text-xs text-slate-400">
+                                    Semantic Taste Affinity
                                 </span>
                             </div>
 
@@ -265,16 +285,16 @@ const AIDiscoveryPage: React.FC = () => {
                             </div>
                         </div>
                     ) : initialQuery && !loading ? (
-                        <div className="text-center py-20 bg-cinecue-surface/40 rounded-2xl border border-cinecue-border p-8 max-w-lg mx-auto">
-                            <p className="text-lg font-bold text-white mb-2">No direct narrative match found</p>
-                            <p className="text-sm text-cinecue-muted mb-6">
-                                Try describing a specific film you like (e.g. "movies similar to Interstellar") or broader genres like "thriller" or "sci-fi".
+                        <div className="text-center py-16 backdrop-blur-2xl bg-white/[0.03] rounded-3xl border border-white/10 p-8 max-w-lg mx-auto">
+                            <p className="text-lg font-bold text-white mb-2 font-display">No direct narrative match found</p>
+                            <p className="text-sm text-slate-400 mb-6">
+                                Try describing a specific film you like (e.g. "movies similar to Interstellar") or broader genres like "sci-fi" or "neo-noir".
                             </p>
                             <button
                                 onClick={() => handlePromptSelect("Mind-bending psychological thrillers with twists")}
-                                className="btn btn-secondary text-xs"
+                                className="btn-glass text-xs"
                             >
-                                Try a Sample Query
+                                <FaCompass /> Try a Recommended Prompt
                             </button>
                         </div>
                     ) : null}

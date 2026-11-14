@@ -24,29 +24,32 @@ const SignupPage: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#101114] text-white flex flex-col justify-center items-center px-4 relative overflow-hidden selection:bg-cinecue-amber/30 selection:text-white">
-            {/* Ambient Background Blur */}
-            <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-96 h-96 bg-cinecue-amber/10 blur-3xl pointer-events-none rounded-full" />
+        <div className="min-h-screen bg-[#07080B] text-slate-100 flex flex-col justify-center items-center px-4 relative overflow-hidden transition-colors selection:bg-cyan-500/30 selection:text-white">
+            {/* Ambient Background Glow Orbs */}
+            <div className="absolute top-1/4 left-1/3 w-96 h-96 bg-cyan-500/15 blur-[140px] pointer-events-none rounded-full" />
+            <div className="absolute bottom-1/4 right-1/3 w-96 h-96 bg-violet-600/15 blur-[150px] pointer-events-none rounded-full" />
 
             {/* Brand Logo Header */}
             <Link to="/" className="flex items-center gap-2.5 mb-8 group z-10">
-                <span className="w-10 h-10 rounded-xl bg-gradient-to-tr from-cinecue-amber to-amber-200 flex items-center justify-center text-[#101114] shadow-amber-glow group-hover:scale-105 transition-transform">
-                    <svg className="w-5 h-5 fill-current" viewBox="0 0 24 24">
-                        <path d="M18 4l2 4h-3l-2-4h-2l2 4h-3l-2-4H8l2 4H7L5 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4h-4z"/>
-                    </svg>
-                </span>
-                <span className="font-extrabold text-2xl tracking-tight text-white">
-                    CINE<span className="text-cinecue-amber">CUE</span>
+                <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-cyan-400 to-violet-500 p-[1.5px] shadow-glow-cyan group-hover:shadow-glow-cyan transition-shadow">
+                    <div className="w-full h-full bg-[#07080B] rounded-[14px] flex items-center justify-center">
+                        <span className="text-transparent bg-clip-text bg-gradient-to-tr from-cyan-300 to-violet-300 font-black text-base">
+                            C
+                        </span>
+                    </div>
+                </div>
+                <span className="font-extrabold text-2xl tracking-tight text-white font-display">
+                    CINE<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-violet-400">CUE</span>
                 </span>
             </Link>
 
-            {/* Auth Box */}
-            <div className="w-full max-w-md bg-cinecue-surface border border-cinecue-border p-8 sm:p-10 rounded-3xl shadow-card relative z-10 backdrop-blur-md">
+            {/* Frosted Glass Auth Box */}
+            <div className="w-full max-w-md backdrop-blur-2xl bg-white/[0.04] border border-white/15 p-8 sm:p-10 rounded-3xl shadow-[0_25px_60px_rgba(0,0,0,0.6)] relative z-10">
                 <div className="mb-6">
-                    <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight">
+                    <h1 className="text-2xl sm:text-3xl font-extrabold text-white tracking-tight font-display">
                         Create Your Account
                     </h1>
-                    <p className="text-cinecue-muted text-xs sm:text-sm mt-1">
+                    <p className="text-slate-400 text-xs sm:text-sm mt-1">
                         Start receiving personalized recommendations and track your cinema journey.
                     </p>
                 </div>
@@ -54,8 +57,8 @@ const SignupPage: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Display Name Input */}
                     <div>
-                        <label className="block text-xs font-semibold text-cinecue-muted uppercase tracking-wider mb-1.5">
-                            Your Name / Cinephile Alias
+                        <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
+                            Your Name / Alias
                         </label>
                         <div className="relative">
                             <input
@@ -64,15 +67,15 @@ const SignupPage: React.FC = () => {
                                 onChange={(e) => setDisplayName(e.target.value)}
                                 placeholder="e.g. Alex Rivera"
                                 required
-                                className="w-full pl-10 pr-4 py-3 bg-cinecue-bg border border-cinecue-border rounded-xl text-white placeholder:text-cinecue-muted-dark text-sm focus:border-cinecue-amber focus:ring-1 focus:ring-cinecue-amber focus:outline-none transition-all"
+                                className="w-full pl-10 pr-4 py-3 backdrop-blur-md bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder:text-slate-500 text-sm focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 focus:outline-none transition-all"
                             />
-                            <FaUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cinecue-muted-dark text-xs" />
+                            <FaUser className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs" />
                         </div>
                     </div>
 
                     {/* Email Input */}
                     <div>
-                        <label className="block text-xs font-semibold text-cinecue-muted uppercase tracking-wider mb-1.5">
+                        <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
                             Email Address
                         </label>
                         <div className="relative">
@@ -82,15 +85,15 @@ const SignupPage: React.FC = () => {
                                 onChange={(e) => setEmail(e.target.value)}
                                 placeholder="name@example.com"
                                 required
-                                className="w-full pl-10 pr-4 py-3 bg-cinecue-bg border border-cinecue-border rounded-xl text-white placeholder:text-cinecue-muted-dark text-sm focus:border-cinecue-amber focus:ring-1 focus:ring-cinecue-amber focus:outline-none transition-all"
+                                className="w-full pl-10 pr-4 py-3 backdrop-blur-md bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder:text-slate-500 text-sm focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 focus:outline-none transition-all"
                             />
-                            <FaEnvelope className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cinecue-muted-dark text-xs" />
+                            <FaEnvelope className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs" />
                         </div>
                     </div>
 
                     {/* Password Input */}
                     <div>
-                        <label className="block text-xs font-semibold text-cinecue-muted uppercase tracking-wider mb-1.5">
+                        <label className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1.5">
                             Password
                         </label>
                         <div className="relative">
@@ -98,16 +101,15 @@ const SignupPage: React.FC = () => {
                                 type={showPassword ? 'text' : 'password'}
                                 value={password}
                                 onChange={(e) => setPassword(e.target.value)}
-                                placeholder="At least 6 characters"
+                                placeholder="••••••••"
                                 required
-                                minLength={6}
-                                className="w-full pl-10 pr-11 py-3 bg-cinecue-bg border border-cinecue-border rounded-xl text-white placeholder:text-cinecue-muted-dark text-sm focus:border-cinecue-amber focus:ring-1 focus:ring-cinecue-amber focus:outline-none transition-all"
+                                className="w-full pl-10 pr-11 py-3 backdrop-blur-md bg-white/[0.04] border border-white/10 rounded-xl text-white placeholder:text-slate-500 text-sm focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400 focus:outline-none transition-all"
                             />
-                            <FaLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-cinecue-muted-dark text-xs" />
+                            <FaLock className="absolute left-3.5 top-1/2 -translate-y-1/2 text-slate-500 text-xs" />
                             <button
                                 type="button"
                                 onClick={() => setShowPassword(!showPassword)}
-                                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-cinecue-muted hover:text-white text-xs focus:outline-none"
+                                className="absolute right-3.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white text-xs focus:outline-none"
                             >
                                 {showPassword ? <FaEyeSlash /> : <FaEye />}
                             </button>
@@ -116,7 +118,7 @@ const SignupPage: React.FC = () => {
 
                     {/* Error Message */}
                     {error && (
-                        <div className="p-3 rounded-xl bg-cinecue-crimson/15 border border-cinecue-crimson/30 text-cinecue-crimson text-xs font-medium">
+                        <div className="p-3 rounded-xl bg-rose-500/15 border border-rose-500/30 text-rose-300 text-xs font-medium">
                             {error}
                         </div>
                     )}
@@ -125,27 +127,22 @@ const SignupPage: React.FC = () => {
                     <button
                         type="submit"
                         disabled={loading === 'loading'}
-                        className="w-full btn btn-primary py-3 rounded-xl font-bold text-sm shadow-amber-glow mt-2"
+                        className="btn-gradient w-full py-3 rounded-xl font-bold text-sm shadow-glow-cyan mt-2"
                     >
-                        {loading === 'loading' ? 'Creating Account...' : 'Get Started with CINECUE'}
+                        {loading === 'loading' ? 'Creating Account...' : 'Get Started'}
                     </button>
                 </form>
 
-                {/* Footer Switch */}
-                <div className="mt-8 pt-6 border-t border-cinecue-border/60 text-center text-xs text-cinecue-muted">
-                    <p>
+                {/* Footer link */}
+                <div className="mt-6 pt-6 border-t border-white/10 text-center">
+                    <p className="text-xs text-slate-400">
                         Already have an account?{' '}
-                        <Link to="/login" className="text-cinecue-amber font-semibold hover:underline">
-                            Sign in here
+                        <Link to="/login" className="text-cyan-400 hover:text-cyan-300 font-semibold underline underline-offset-4 ml-1">
+                            Sign In
                         </Link>
                     </p>
                 </div>
             </div>
-
-            {/* Tagline */}
-            <p className="mt-8 text-xs text-cinecue-muted-dark z-10">
-                CINECUE • Discover your next favourite film.
-            </p>
         </div>
     );
 };

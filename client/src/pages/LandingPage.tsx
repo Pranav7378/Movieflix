@@ -6,7 +6,8 @@ import {
     FaPlay, 
     FaBookmark, 
     FaArrowRight, 
-    FaCompass
+    FaCompass,
+    FaBolt
 } from 'react-icons/fa';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -17,7 +18,7 @@ import { Movie } from '../types';
 const EXAMPLE_PROMPTS = [
     "Mind-bending psychological thrillers",
     "Underrated science fiction gems",
-    "Emotional storytelling with great endings",
+    "Atmospheric neo-noir storytelling",
     "Telugu thrillers with exceptional screenplays",
 ];
 
@@ -45,65 +46,66 @@ const LandingPage: React.FC = () => {
     };
 
     return (
-        <div className="min-h-screen bg-[#101114] text-white flex flex-col selection:bg-cinecue-amber/30 selection:text-white">
+        <div className="min-h-screen bg-[#07080B] text-slate-100 flex flex-col relative overflow-hidden transition-colors">
+            {/* Ambient Lighting Orbs */}
+            <div className="absolute top-20 left-1/3 w-[500px] h-[500px] rounded-full bg-cyan-500/10 blur-[140px] pointer-events-none -z-10" />
+            <div className="absolute top-48 right-1/4 w-[450px] h-[450px] rounded-full bg-violet-600/15 blur-[150px] pointer-events-none -z-10" />
+
             <Navbar />
 
             {/* Hero Section */}
-            <section className="relative pt-12 pb-20 md:pt-20 md:pb-32 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
-                {/* Background Ambient Glow */}
-                <div className="absolute top-10 left-1/2 -translate-x-1/2 w-3/4 max-w-3xl h-72 bg-gradient-to-tr from-cinecue-amber/15 via-amber-500/10 to-transparent blur-3xl pointer-events-none rounded-full" />
-
+            <section className="relative pt-12 pb-20 md:pt-20 md:pb-28 px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto w-full">
                 <div className="relative z-10 text-center max-w-4xl mx-auto">
                     {/* Badge */}
-                    <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-cinecue-surface border border-cinecue-amber/30 text-cinecue-amber text-xs font-semibold uppercase tracking-wider mb-6 shadow-sm">
-                        <FaMagic className="text-xs" />
-                        AI-Powered Film Intelligence
+                    <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full backdrop-blur-xl bg-white/[0.04] border border-cyan-400/40 text-cyan-300 text-xs font-semibold uppercase tracking-wider mb-8 shadow-glow-cyan">
+                        <FaBolt className="text-cyan-400 text-xs" />
+                        Spatial Cinema Intelligence
                     </div>
 
                     {/* Headline */}
-                    <h1 className="text-4xl sm:text-6xl md:text-7xl font-extrabold tracking-tight text-white mb-6 font-sans">
-                        Stop Scrolling. <br />
-                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cinecue-amber via-amber-300 to-amber-100">
-                            Start Discovering.
+                    <h1 className="text-4xl sm:text-6xl md:text-7xl font-black tracking-tight text-white mb-6 font-display">
+                        Stop Endless Scrolling. <br />
+                        <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-violet-400 to-fuchsia-400">
+                            Discover Pure Cinema.
                         </span>
                     </h1>
 
-                    <p className="text-base sm:text-xl text-cinecue-muted max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
-                        Discover your next favourite film with intelligent recommendations tailored to what you love watching. Content-based matching, instant trailers, and a personal cinema diary.
+                    <p className="text-base sm:text-lg text-slate-300 max-w-2xl mx-auto mb-10 leading-relaxed font-normal">
+                        Discover your next favourite film with intelligent recommendations tailored to what you love watching. Translucent spatial design, content-based matching, and instant trailers.
                     </p>
 
-                    {/* Natural Language Search Bar */}
+                    {/* Translucent Glass Natural Language Prompt Bar */}
                     <form 
                         onSubmit={handleSearchSubmit}
-                        className="max-w-2xl mx-auto bg-cinecue-surface/90 border border-cinecue-border hover:border-cinecue-amber/60 focus-within:border-cinecue-amber p-2 rounded-2xl shadow-card backdrop-blur-md transition-all mb-4 flex items-center gap-2"
+                        className="max-w-2xl mx-auto backdrop-blur-2xl bg-white/[0.05] border border-white/15 focus-within:border-cyan-400/80 p-2 sm:p-2.5 rounded-2xl shadow-[0_15px_40px_rgba(0,0,0,0.5)] transition-all mb-4 flex items-center gap-2"
                     >
-                        <div className="pl-3 text-cinecue-amber">
+                        <div className="pl-3 text-cyan-400">
                             <FaSearch />
                         </div>
                         <input
                             type="text"
                             value={searchPrompt}
                             onChange={(e) => setSearchPrompt(e.target.value)}
-                            placeholder="Describe the movie you're in the mood for..."
-                            className="bg-transparent border-none text-white placeholder:text-cinecue-muted-dark text-sm sm:text-base focus:outline-none flex-1 py-2 px-1"
+                            placeholder="Describe what you want to experience..."
+                            className="bg-transparent border-none text-white placeholder:text-slate-400 text-sm sm:text-base focus:outline-none flex-1 py-1.5 px-2"
                         />
                         <button
                             type="submit"
-                            className="btn btn-primary px-4 sm:px-6 py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap"
+                            className="btn-gradient px-4 sm:px-6 py-2.5 rounded-xl font-semibold text-xs sm:text-sm whitespace-nowrap flex items-center gap-1.5"
                         >
                             <FaMagic className="text-xs" />
-                            Discover
+                            <span>Discover</span>
                         </button>
                     </form>
 
-                    {/* Prompt Pill Suggestions */}
+                    {/* Prompt Suggestions */}
                     <div className="flex flex-wrap items-center justify-center gap-2 max-w-2xl mx-auto mb-10 text-xs">
-                        <span className="text-cinecue-muted-dark font-medium mr-1">Try:</span>
+                        <span className="text-slate-400 font-medium mr-1">Try:</span>
                         {EXAMPLE_PROMPTS.map((prompt, idx) => (
                             <button
                                 key={idx}
                                 onClick={() => handlePromptClick(prompt)}
-                                className="px-3 py-1 rounded-full bg-cinecue-surface/60 border border-cinecue-border text-cinecue-muted hover:text-cinecue-amber hover:border-cinecue-amber/40 transition"
+                                className="px-3 py-1 rounded-full backdrop-blur-md bg-white/[0.04] border border-white/10 text-slate-300 hover:text-cyan-300 hover:border-cyan-400/40 hover:bg-cyan-500/10 transition"
                             >
                                 {prompt}
                             </button>
@@ -114,14 +116,14 @@ const LandingPage: React.FC = () => {
                     <div className="flex flex-wrap items-center justify-center gap-4">
                         <Link 
                             to="/signup" 
-                            className="btn btn-primary text-sm sm:text-base px-7 py-3 rounded-xl shadow-amber-glow"
+                            className="btn-gradient text-sm sm:text-base px-7 py-3 rounded-xl flex items-center gap-2"
                         >
                             <FaCompass />
-                            Explore Movies
+                            <span>Explore Catalog</span>
                         </Link>
                         <a 
                             href="#features" 
-                            className="btn btn-secondary text-sm sm:text-base px-6 py-3 rounded-xl"
+                            className="btn-glass text-sm sm:text-base px-6 py-3 rounded-xl"
                         >
                             How It Works
                         </a>
@@ -133,87 +135,87 @@ const LandingPage: React.FC = () => {
             {previewMovies.length > 0 && (
                 <section className="max-w-7xl mx-auto w-full mb-20">
                     <MovieCarousel 
-                        title="Trending This Week" 
-                        subtitle="Acclaimed cinema discovered across the platform"
+                        title="Community Masterpieces" 
+                        subtitle="Acclaimed cinema trending across the CINECUE community"
                         movies={previewMovies} 
                     />
                 </section>
             )}
 
             {/* 3 Core Pillars Section */}
-            <section id="features" className="py-20 bg-[#14161C] border-y border-cinecue-border/60">
+            <section id="features" className="py-20 relative">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                     <div className="text-center max-w-3xl mx-auto mb-16">
-                        <span className="text-cinecue-amber text-xs font-bold uppercase tracking-widest">
-                            Built For Film Lovers
+                        <span className="text-cyan-400 text-xs font-bold uppercase tracking-widest">
+                            Cinema Intelligence
                         </span>
-                        <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4">
-                            Everything You Need to Find Great Cinema
+                        <h2 className="text-3xl sm:text-4xl font-extrabold text-white mt-2 mb-4 font-display">
+                            Engineered for True Film Lovers
                         </h2>
-                        <p className="text-cinecue-muted text-sm sm:text-base">
-                            CINECUE isn't a streaming service with endless catalog bloat. It's an intelligent cinema companion designed to help you decide what to watch in seconds.
+                        <p className="text-slate-400 text-sm sm:text-base">
+                            CINECUE isn't a streaming service with endless catalog clutter. It's a spatial cinema companion designed to help you discover masterpieces in seconds.
                         </p>
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                         {/* Feature 1 */}
-                        <div className="bg-cinecue-surface border border-cinecue-border/80 p-8 rounded-2xl relative overflow-hidden group hover:border-cinecue-amber/50 transition-all duration-300">
-                            <div className="w-12 h-12 rounded-xl bg-cinecue-amber/15 border border-cinecue-amber/30 flex items-center justify-center text-cinecue-amber mb-6 group-hover:scale-110 transition-transform">
-                                <FaMagic size={22} />
+                        <div className="backdrop-blur-2xl bg-white/[0.04] border border-white/10 p-8 rounded-3xl relative overflow-hidden group hover:border-cyan-400/50 hover:shadow-glow-cyan transition-all duration-300">
+                            <div className="w-12 h-12 rounded-2xl bg-cyan-500/15 border border-cyan-400/30 flex items-center justify-center text-cyan-400 mb-6 group-hover:scale-110 transition-transform shadow-glow-cyan">
+                                <FaMagic size={20} />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-2">AI Taste Engine</h3>
-                            <p className="text-cinecue-muted text-sm leading-relaxed mb-4">
-                                Our content-based machine learning engine analyzes movie storylines, directorial style, tone, and character arcs to recommend genuine matches — not just whatever is sponsored.
+                            <h3 className="text-xl font-bold text-white mb-2 font-display">AI Taste Synapse</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed mb-4">
+                                Content-based vector similarity analyzing narrative arcs, directorial aesthetic, pacing, and emotional tone to match films you will love.
                             </p>
-                            <span className="text-xs font-semibold text-cinecue-amber flex items-center gap-1.5">
-                                TF-IDF Content Similarity <FaArrowRight size={10} />
+                            <span className="text-xs font-semibold text-cyan-400 flex items-center gap-1.5">
+                                Intelligent Narrative Matching <FaArrowRight size={10} />
                             </span>
                         </div>
 
                         {/* Feature 2 */}
-                        <div className="bg-cinecue-surface border border-cinecue-border/80 p-8 rounded-2xl relative overflow-hidden group hover:border-cinecue-amber/50 transition-all duration-300">
-                            <div className="w-12 h-12 rounded-xl bg-cinecue-amber/15 border border-cinecue-amber/30 flex items-center justify-center text-cinecue-amber mb-6 group-hover:scale-110 transition-transform">
-                                <FaBookmark size={22} />
+                        <div className="backdrop-blur-2xl bg-white/[0.04] border border-white/10 p-8 rounded-3xl relative overflow-hidden group hover:border-violet-400/50 hover:shadow-glow-violet transition-all duration-300">
+                            <div className="w-12 h-12 rounded-2xl bg-violet-500/15 border border-violet-400/30 flex items-center justify-center text-violet-400 mb-6 group-hover:scale-110 transition-transform shadow-glow-violet">
+                                <FaBookmark size={18} />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-2">Watchlist & Diary</h3>
-                            <p className="text-cinecue-muted text-sm leading-relaxed mb-4">
-                                Curate movies you want to watch and log what you've seen. Filter by genre, track your progress, and maintain a clean personal cinema diary inspired by Letterboxd.
+                            <h3 className="text-xl font-bold text-white mb-2 font-display">Watchlist & Cinema Diary</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed mb-4">
+                                Keep track of every film on your horizon and record your viewing history with timestamps, completion rates, and genre analytics.
                             </p>
-                            <span className="text-xs font-semibold text-cinecue-amber flex items-center gap-1.5">
-                                Cloud Synced with Neon Postgres <FaArrowRight size={10} />
+                            <span className="text-xs font-semibold text-violet-400 flex items-center gap-1.5">
+                                Synced Cinema Cloud Diary <FaArrowRight size={10} />
                             </span>
                         </div>
 
                         {/* Feature 3 */}
-                        <div className="bg-cinecue-surface border border-cinecue-border/80 p-8 rounded-2xl relative overflow-hidden group hover:border-cinecue-amber/50 transition-all duration-300">
-                            <div className="w-12 h-12 rounded-xl bg-cinecue-amber/15 border border-cinecue-amber/30 flex items-center justify-center text-cinecue-amber mb-6 group-hover:scale-110 transition-transform">
-                                <FaPlay size={20} />
+                        <div className="backdrop-blur-2xl bg-white/[0.04] border border-white/10 p-8 rounded-3xl relative overflow-hidden group hover:border-fuchsia-400/50 transition-all duration-300">
+                            <div className="w-12 h-12 rounded-2xl bg-fuchsia-500/15 border border-fuchsia-400/30 flex items-center justify-center text-fuchsia-400 mb-6 group-hover:scale-110 transition-transform">
+                                <FaPlay size={18} />
                             </div>
-                            <h3 className="text-xl font-bold text-white mb-2">Instant 4K Trailers</h3>
-                            <p className="text-cinecue-muted text-sm leading-relaxed mb-4">
-                                Preview official HD and 4K trailers directly within the app. Zero external redirect hops, zero advertisements, and instant video playback.
+                            <h3 className="text-xl font-bold text-white mb-2 font-display">Instant 4K Trailers</h3>
+                            <p className="text-slate-400 text-sm leading-relaxed mb-4">
+                                Experience official trailers directly in spatial frosted glass modals. No annoying advertisement redirects or external hops.
                             </p>
-                            <span className="text-xs font-semibold text-cinecue-amber flex items-center gap-1.5">
-                                YouTube Data API Caching <FaArrowRight size={10} />
+                            <span className="text-xs font-semibold text-fuchsia-400 flex items-center gap-1.5">
+                                High-Definition Playback <FaArrowRight size={10} />
                             </span>
                         </div>
                     </div>
                 </div>
             </section>
 
-            {/* CTA Banner */}
+            {/* Bottom Callout Banner */}
             <section className="py-20 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto text-center w-full">
-                <div className="bg-gradient-to-b from-cinecue-surface to-cinecue-bg-secondary border border-cinecue-border p-10 sm:p-14 rounded-3xl relative overflow-hidden">
+                <div className="backdrop-blur-2xl bg-gradient-to-b from-white/[0.06] to-white/[0.02] border border-white/15 p-10 sm:p-14 rounded-3xl relative overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.5)]">
                     <div className="relative z-10 max-w-2xl mx-auto">
-                        <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4">
+                        <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-4 font-display">
                             Ready to discover your next favourite film?
                         </h2>
-                        <p className="text-cinecue-muted text-sm sm:text-base mb-8">
-                            Join CINECUE for free. Build your personal watchlist and let our AI engine find stories that resonate with you.
+                        <p className="text-slate-300 text-sm sm:text-base mb-8 leading-relaxed">
+                            Start exploring with CINECUE today. Discover movies that truly resonate with your taste.
                         </p>
                         <Link 
                             to="/signup" 
-                            className="btn btn-primary text-base px-8 py-3.5 rounded-xl font-bold shadow-amber-glow"
+                            className="btn-gradient text-base px-8 py-3.5 rounded-xl font-bold shadow-glow-cyan"
                         >
                             Get Started Free
                         </Link>

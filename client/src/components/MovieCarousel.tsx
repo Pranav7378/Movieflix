@@ -35,12 +35,12 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({
             {/* Header */}
             <div className="flex items-baseline justify-between mb-4 px-4 sm:px-6 lg:px-8">
                 <div>
-                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-tight flex items-center gap-2">
-                        <span className="w-1.5 h-4 rounded-full bg-cinecue-amber inline-block"></span>
+                    <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-white tracking-tight flex items-center gap-2.5 font-display">
+                        <span className="w-1.5 h-5 rounded-full bg-gradient-to-b from-cyan-400 to-violet-500 shadow-glow-cyan inline-block" />
                         {title}
                     </h2>
                     {subtitle && (
-                        <p className="text-xs sm:text-sm text-cinecue-muted mt-0.5 ml-3.5">
+                        <p className="text-xs sm:text-sm text-slate-400 mt-0.5 ml-4">
                             {subtitle}
                         </p>
                     )}
@@ -53,7 +53,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({
                 <button
                     onClick={() => scroll('left')}
                     aria-label="Scroll left"
-                    className="absolute left-2 sm:left-4 top-[35%] -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/75 text-white border border-cinecue-border/60 hover:bg-cinecue-amber hover:text-[#101114] hover:border-transparent flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all duration-200 shadow-xl backdrop-blur-sm"
+                    className="absolute left-2 sm:left-4 top-[40%] -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#07080B]/80 text-white border border-white/20 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-glow-cyan flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all duration-200 shadow-xl backdrop-blur-md"
                 >
                     <FaChevronLeft className="text-xs" />
                 </button>
@@ -61,11 +61,10 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({
                 {/* Items Row */}
                 <div
                     ref={scrollRef}
-                    className="flex gap-4 sm:gap-5 overflow-x-auto scroll-smooth px-4 sm:px-6 lg:px-8 py-2 no-scrollbar"
+                    className="flex gap-4 sm:gap-5 overflow-x-auto scroll-smooth px-4 sm:px-6 lg:px-8 py-3 no-scrollbar"
                     style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
                 >
                     {movies.map((movie, index) => {
-                        // Generate deterministic pseudo match score for visual flair when requested
                         const pseudoMatch = showMatchBadge ? 98 - (index * 2) : undefined;
                         return (
                             <MovieCard 
@@ -83,7 +82,7 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({
                 <button
                     onClick={() => scroll('right')}
                     aria-label="Scroll right"
-                    className="absolute right-2 sm:right-4 top-[35%] -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-black/75 text-white border border-cinecue-border/60 hover:bg-cinecue-amber hover:text-[#101114] hover:border-transparent flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all duration-200 shadow-xl backdrop-blur-sm"
+                    className="absolute right-2 sm:right-4 top-[40%] -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#07080B]/80 text-white border border-white/20 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-glow-cyan flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all duration-200 shadow-xl backdrop-blur-md"
                 >
                     <FaChevronRight className="text-xs" />
                 </button>

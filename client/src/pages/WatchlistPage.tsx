@@ -62,59 +62,63 @@ const WatchlistPage: React.FC = () => {
     }, [watchlist, selectedGenre, sortBy]);
 
     return (
-        <div className="min-h-screen bg-[#101114] text-white flex flex-col selection:bg-cinecue-amber/30 selection:text-white">
+        <div className="min-h-screen bg-[#07080B] text-slate-100 flex flex-col relative overflow-hidden transition-colors">
+            {/* Ambient Lighting Orbs */}
+            <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-cyan-500/10 blur-[130px] pointer-events-none -z-10" />
+            <div className="absolute top-64 right-10 w-[450px] h-[450px] rounded-full bg-violet-600/10 blur-[150px] pointer-events-none -z-10" />
+
             <Navbar />
 
             <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 w-full flex-1">
                 {/* Header */}
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-cinecue-border">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-white/10">
                     <div>
-                        <div className="inline-flex items-center gap-2 text-cinecue-amber text-xs font-bold uppercase tracking-wider mb-1">
+                        <div className="inline-flex items-center gap-2 text-cyan-400 text-xs font-bold uppercase tracking-wider mb-1">
                             <FaBookmark className="text-[10px]" />
-                            Personal Cinema Queue
+                            <span>Spatial Queue</span>
                         </div>
-                        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight">
+                        <h1 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-display">
                             My Watchlist
                         </h1>
-                        <p className="text-sm text-cinecue-muted mt-1">
-                            {watchlist.length} {watchlist.length === 1 ? 'film' : 'films'} queued for your upcoming movie nights
+                        <p className="text-sm text-slate-400 mt-1">
+                            {watchlist.length} {watchlist.length === 1 ? 'film' : 'films'} queued in your personal collection
                         </p>
                     </div>
 
                     {/* Sorting Controls */}
                     {watchlist.length > 0 && (
                         <div className="flex items-center gap-2">
-                            <span className="text-xs text-cinecue-muted flex items-center gap-1">
-                                <FaSortAmountDown className="text-cinecue-amber text-xs" /> Sort:
+                            <span className="text-xs text-slate-400 flex items-center gap-1">
+                                <FaSortAmountDown className="text-cyan-400 text-xs" /> Sort:
                             </span>
                             <select
                                 value={sortBy}
                                 onChange={(e) => setSortBy(e.target.value as any)}
-                                className="bg-cinecue-surface text-cinecue-text text-xs border border-cinecue-border rounded-lg px-3 py-2 focus:border-cinecue-amber focus:outline-none"
+                                className="backdrop-blur-md bg-white/[0.05] text-slate-200 text-xs border border-white/10 rounded-xl px-3 py-2 focus:border-cyan-400 focus:outline-none"
                             >
-                                <option value="recent">Recently Added</option>
-                                <option value="rating">Highest Rated</option>
-                                <option value="year">Release Year</option>
-                                <option value="title">Alphabetical (A-Z)</option>
+                                <option value="recent" className="bg-[#07080B]">Recently Added</option>
+                                <option value="rating" className="bg-[#07080B]">Highest Rated</option>
+                                <option value="year" className="bg-[#07080B]">Release Year</option>
+                                <option value="title" className="bg-[#07080B]">Alphabetical (A-Z)</option>
                             </select>
                         </div>
                     )}
                 </div>
 
-                {/* Genre Filter Chips */}
-                {watchlist.length > 0 && availableGenres.length > 2 && (
-                    <div className="flex items-center gap-2 overflow-x-auto pb-4 mb-6 text-xs no-scrollbar">
-                        <span className="text-cinecue-muted-dark flex items-center gap-1 flex-shrink-0">
-                            <FaFilter className="text-[10px]" /> Genre:
+                {/* Genre Filter Pills */}
+                {availableGenres.length > 2 && (
+                    <div className="flex items-center gap-2 mb-8 overflow-x-auto pb-2 no-scrollbar">
+                        <span className="text-xs text-slate-400 flex items-center gap-1 mr-1 flex-shrink-0">
+                            <FaFilter className="text-[10px] text-cyan-400" /> Filter:
                         </span>
                         {availableGenres.map((genre) => (
                             <button
                                 key={genre}
                                 onClick={() => setSelectedGenre(genre)}
-                                className={`px-3 py-1.5 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
+                                className={`px-3 py-1 rounded-full text-xs font-medium whitespace-nowrap transition-all ${
                                     selectedGenre === genre
-                                        ? 'bg-cinecue-amber text-[#101114] font-semibold'
-                                        : 'bg-cinecue-surface border border-cinecue-border text-cinecue-muted hover:text-white hover:border-cinecue-border-light'
+                                        ? 'bg-gradient-to-r from-cyan-500 to-violet-600 text-white shadow-glow-cyan'
+                                        : 'backdrop-blur-md bg-white/[0.04] border border-white/10 text-slate-400 hover:text-white hover:border-white/20'
                                 }`}
                             >
                                 {genre}
@@ -123,52 +127,48 @@ const WatchlistPage: React.FC = () => {
                     </div>
                 )}
 
-                {/* Content */}
+                {/* Watchlist Grid */}
                 {loading === 'loading' && watchlist.length === 0 ? (
                     <div className="py-20 flex flex-col items-center justify-center">
-                        <div className="w-10 h-10 rounded-full border-2 border-cinecue-amber/20 border-t-cinecue-amber animate-spin mb-4" />
-                        <p className="text-cinecue-muted text-sm">Loading your watchlist...</p>
-                    </div>
-                ) : watchlist.length === 0 ? (
-                    /* High-Fidelity Empty State */
-                    <div className="max-w-md mx-auto text-center py-20 px-6 bg-cinecue-surface/40 border border-cinecue-border/70 rounded-3xl my-8">
-                        <div className="w-16 h-16 rounded-2xl bg-cinecue-amber/15 border border-cinecue-amber/30 text-cinecue-amber flex items-center justify-center mx-auto mb-6 shadow-inner">
-                            <FaBookmark size={24} />
+                        <div className="relative w-12 h-12 flex items-center justify-center mb-4">
+                            <div className="absolute inset-0 rounded-full border-2 border-cyan-400/20 border-t-cyan-400 animate-spin" />
+                            <div className="w-4 h-4 rounded-full bg-gradient-to-tr from-cyan-400 to-violet-500 shadow-glow-cyan animate-pulse" />
                         </div>
-                        <h2 className="text-2xl font-bold text-white mb-2">
-                            Your next movie night starts here.
-                        </h2>
-                        <p className="text-cinecue-muted text-sm leading-relaxed mb-8">
-                            Save films that catch your eye and find them whenever you're ready to watch. Browse our recommendations or search for your favourites.
-                        </p>
-                        <Link 
-                            to="/home" 
-                            className="btn btn-primary px-6 py-3 rounded-xl font-semibold text-sm shadow-amber-glow"
-                        >
-                            <FaCompass />
-                            Discover Movies
-                        </Link>
+                        <p className="text-slate-400 text-sm">Synchronizing your watchlist...</p>
                     </div>
-                ) : filteredWatchlist.length === 0 ? (
-                    <div className="text-center py-16 bg-cinecue-surface/30 rounded-2xl border border-cinecue-border">
-                        <p className="text-cinecue-muted text-sm">No movies in your list match the "{selectedGenre}" genre.</p>
+                ) : filteredWatchlist.length > 0 ? (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
+                        {filteredWatchlist.map((movie, idx) => (
+                            <MovieCard 
+                                key={`${movie.imdbID}-${idx}`} 
+                                movie={movie} 
+                                onActionCompleted={setToastMessage}
+                            />
+                        ))}
+                    </div>
+                ) : watchlist.length > 0 && filteredWatchlist.length === 0 ? (
+                    <div className="text-center py-20 backdrop-blur-2xl bg-white/[0.03] border border-white/10 rounded-3xl p-8 max-w-md mx-auto">
+                        <p className="text-base font-bold text-white mb-2">No films match "{selectedGenre}"</p>
+                        <p className="text-xs text-slate-400 mb-4">Try clearing the genre filter to view all saved movies.</p>
                         <button
                             onClick={() => setSelectedGenre('All')}
-                            className="btn btn-secondary text-xs mt-3"
+                            className="btn-glass text-xs"
                         >
-                            Reset Genre Filter
+                            Reset Filter
                         </button>
                     </div>
                 ) : (
-                    /* Movies Grid */
-                    <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-4 sm:gap-6">
-                        {filteredWatchlist.map((movie) => (
-                            <MovieCard 
-                                key={movie.imdbID} 
-                                movie={movie}
-                                onActionCompleted={setToastMessage} 
-                            />
-                        ))}
+                    <div className="text-center py-24 backdrop-blur-2xl bg-white/[0.03] border border-white/10 rounded-3xl p-8 max-w-lg mx-auto">
+                        <div className="w-14 h-14 rounded-2xl bg-cyan-500/10 border border-cyan-400/30 flex items-center justify-center text-cyan-400 mx-auto mb-4">
+                            <FaBookmark size={22} />
+                        </div>
+                        <h2 className="text-xl font-bold text-white mb-2 font-display">Your Watchlist is Empty</h2>
+                        <p className="text-xs sm:text-sm text-slate-400 mb-6 leading-relaxed">
+                            Discover films that match your taste and bookmark them here to plan your future viewing sessions.
+                        </p>
+                        <Link to="/home" className="btn-gradient text-xs sm:text-sm px-6 py-2.5">
+                            <FaCompass /> Discover Films
+                        </Link>
                     </div>
                 )}
             </main>

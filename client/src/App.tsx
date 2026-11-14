@@ -5,6 +5,8 @@ import { onAuthStateChanged } from 'firebase/auth';
 import { auth } from './firebase/config';
 import { setUser, setInitialized } from './features/auth/authSlice';
 import { RootState, AppDispatch } from './app/store';
+import { ThemeProvider } from './context/ThemeContext';
+import BottomDock from './components/BottomDock';
 
 // Pages
 import LandingPage from './pages/LandingPage';
@@ -28,9 +30,12 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
     if (!initialized) {
         return (
-            <div className="min-h-screen bg-[#101114] flex flex-col items-center justify-center">
-                <div className="w-10 h-10 rounded-full border-2 border-cinecue-amber/20 border-t-cinecue-amber animate-spin mb-4" />
-                <div className="text-cinecue-muted text-sm font-semibold tracking-wider uppercase font-sans">
+            <div className="min-h-screen bg-[#07080B] flex flex-col items-center justify-center">
+                <div className="relative w-12 h-12 flex items-center justify-center">
+                    <div className="absolute inset-0 rounded-full border-2 border-cyan-400/20 border-t-cyan-400 animate-spin" />
+                    <div className="w-4 h-4 rounded-full bg-gradient-to-tr from-cyan-400 to-violet-500 shadow-glow-cyan animate-pulse" />
+                </div>
+                <div className="text-slate-400 text-xs font-semibold tracking-widest uppercase font-display mt-4">
                     CINECUE
                 </div>
             </div>
@@ -63,70 +68,75 @@ function App() {
     }, [dispatch]);
 
     return (
-        <Router>
-            <div className="App min-h-screen bg-[#101114] text-white">
-                <Routes>
-                    {/* Public Routes */}
-                    <Route path="/" element={<LandingPage />} />
-                    <Route path="/login" element={<LoginPage />} />
-                    <Route path="/signup" element={<SignupPage />} />
-                    <Route path="/ai-discovery" element={<AIDiscoveryPage />} />
+        <ThemeProvider>
+            <Router>
+                <div className="App min-h-screen bg-[#07080B] dark:bg-[#07080B] text-slate-100 selection:bg-cyan-500/30 selection:text-white transition-colors duration-200">
+                    <Routes>
+                        {/* Public Routes */}
+                        <Route path="/" element={<LandingPage />} />
+                        <Route path="/login" element={<LoginPage />} />
+                        <Route path="/signup" element={<SignupPage />} />
+                        <Route path="/ai-discovery" element={<AIDiscoveryPage />} />
 
-                    {/* Protected Routes */}
-                    <Route
-                        path="/home"
-                        element={
-                            <ProtectedRoute>
-                                <HomePage />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/movie/:id"
-                        element={
-                            <ProtectedRoute>
-                                <MovieDetailsPage />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/profile"
-                        element={
-                            <ProtectedRoute>
-                                <ProfilePage />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/watchlist"
-                        element={
-                            <ProtectedRoute>
-                                <WatchlistPage />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/watched"
-                        element={
-                            <ProtectedRoute>
-                                <WatchedPage />
-                            </ProtectedRoute>
-                        }
-                    />
-                    <Route
-                        path="/search"
-                        element={
-                            <ProtectedRoute>
-                                <SearchPage />
-                            </ProtectedRoute>
-                        }
-                    />
+                        {/* Protected Routes */}
+                        <Route
+                            path="/home"
+                            element={
+                                <ProtectedRoute>
+                                    <HomePage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/movie/:id"
+                            element={
+                                <ProtectedRoute>
+                                    <MovieDetailsPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/profile"
+                            element={
+                                <ProtectedRoute>
+                                    <ProfilePage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/watchlist"
+                            element={
+                                <ProtectedRoute>
+                                    <WatchlistPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/watched"
+                            element={
+                                <ProtectedRoute>
+                                    <WatchedPage />
+                                </ProtectedRoute>
+                            }
+                        />
+                        <Route
+                            path="/search"
+                            element={
+                                <ProtectedRoute>
+                                    <SearchPage />
+                                </ProtectedRoute>
+                            }
+                        />
 
-                    {/* Catch all */}
-                    <Route path="*" element={<Navigate to="/" replace />} />
-                </Routes>
-            </div>
-        </Router>
+                        {/* Catch all */}
+                        <Route path="*" element={<Navigate to="/" replace />} />
+                    </Routes>
+
+                    {/* Mobile Floating Glass Navigation Dock */}
+                    <BottomDock />
+                </div>
+            </Router>
+        </ThemeProvider>
     );
 }
 

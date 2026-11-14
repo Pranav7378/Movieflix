@@ -19,13 +19,13 @@ const Toast: React.FC<ToastProps> = ({ message, onClose, type = 'success' }) => 
     if (!message) return null;
 
     return (
-        <div className="fixed bottom-6 right-6 z-50 flex items-center gap-2.5 bg-cinecue-surface border border-cinecue-amber/50 text-white px-4 py-3 rounded-xl shadow-2xl backdrop-blur-md animate-in slide-in-from-bottom-5 duration-200">
+        <div className="fixed bottom-20 md:bottom-8 right-6 z-50 flex items-center gap-2.5 backdrop-blur-2xl bg-[#07080B]/90 border border-cyan-400/50 text-white px-5 py-3 rounded-2xl shadow-[0_15px_35px_rgba(0,0,0,0.6)] animate-in slide-in-from-bottom-5 duration-200">
             {type === 'success' ? (
-                <FaCheckCircle className="text-cinecue-amber text-sm flex-shrink-0" />
+                <FaCheckCircle className="text-cyan-400 text-sm flex-shrink-0" />
             ) : (
-                <FaInfoCircle className="text-cinecue-amber text-sm flex-shrink-0" />
+                <FaInfoCircle className="text-cyan-400 text-sm flex-shrink-0" />
             )}
-            <span className="text-xs sm:text-sm font-medium">{message}</span>
+            <span className="text-xs sm:text-sm font-medium tracking-tight">{message}</span>
         </div>
     );
 };

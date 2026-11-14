@@ -3,51 +3,87 @@
 @tailwind utilities;
 
 @layer base {
+  :root {
+    --bg-main: #07080B;
+    --text-main: #F8FAFC;
+    --card-glass: rgba(18, 22, 34, 0.7);
+    --border-glass: rgba(255, 255, 255, 0.08);
+  }
+
+  html.light {
+    --bg-main: #F8FAFC;
+    --text-main: #0F172A;
+    --card-glass: rgba(255, 255, 255, 0.85);
+    --border-glass: rgba(0, 0, 0, 0.08);
+  }
+
   body {
-    @apply bg-cinecue-bg text-cinecue-text font-sans antialiased selection:bg-cinecue-amber/30 selection:text-white;
-    background-color: #101114;
-    color: #F5F5F5;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    transition: background-color 0.25s ease, color 0.25s ease;
+    overflow-x: hidden;
   }
 }
 
 @layer components {
-  /* CINECUE Button System */
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
-  }
-  
-  .btn-primary {
-    @apply bg-cinecue-amber text-[#101114] font-semibold hover:bg-cinecue-amber-hover shadow-sm hover:shadow-amber-glow;
-  }
-  
-  .btn-secondary {
-    @apply bg-cinecue-surface hover:bg-cinecue-surface-light text-cinecue-text border border-cinecue-border hover:border-cinecue-amber/40;
+  /* Frosted Glass Panels */
+  .glass-card {
+    @apply backdrop-blur-xl bg-white/[0.04] dark:bg-white/[0.04] border border-white/10 dark:border-white/10 shadow-glass-card rounded-2xl transition-all duration-300;
   }
 
-  .btn-crimson {
-    @apply bg-cinecue-crimson text-white hover:bg-cinecue-crimson-hover;
+  .light .glass-card {
+    @apply bg-white/75 border-black/5 shadow-glass-card-light text-slate-800;
   }
 
-  .btn-ghost {
-    @apply bg-transparent hover:bg-white/5 text-cinecue-muted hover:text-cinecue-text;
+  .glass-card-hover {
+    @apply glass-card hover:border-cyan-500/40 hover:shadow-glow-ambient hover:-translate-y-0.5;
   }
 
-  /* Surface Cards */
-  .card-surface {
-    @apply bg-cinecue-surface border border-cinecue-border rounded-xl;
+  /* Interactive Pill Navbars */
+  .glass-nav {
+    @apply backdrop-blur-2xl bg-[#07080B]/80 dark:bg-[#07080B]/80 border border-white/10 dark:border-white/10 shadow-lg;
   }
 
-  .card-surface-hover {
-    @apply bg-cinecue-surface border border-cinecue-border hover:border-cinecue-border-light rounded-xl transition-all duration-200;
+  .light .glass-nav {
+    @apply bg-white/80 border-black/5 shadow-md;
   }
 
-  /* Badge Pills */
-  .badge-amber {
-    @apply bg-cinecue-amber/15 text-cinecue-amber border border-cinecue-amber/30 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  /* Buttons */
+  .btn-gradient {
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm text-white bg-gradient-to-r from-cyan-500 via-violet-600 to-fuchsia-600 hover:from-cyan-400 hover:to-violet-500 shadow-glow-cyan hover:shadow-glow-cyan hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
-  .badge-muted {
-    @apply bg-cinecue-surface-light/80 text-cinecue-muted border border-cinecue-border px-2.5 py-0.5 rounded-full text-xs font-medium;
+  .btn-glass {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm backdrop-blur-md bg-white/[0.06] dark:bg-white/[0.06] hover:bg-white/[0.12] dark:hover:bg-white/[0.12] text-white dark:text-white border border-white/10 dark:border-white/10 hover:border-cyan-500/40 transition-all duration-200 cursor-pointer;
+  }
+
+  .light .btn-glass {
+    @apply bg-black/[0.04] hover:bg-black/[0.08] text-slate-800 border-black/10 hover:border-cyan-500/50;
+  }
+
+  .btn-ghost-glass {
+    @apply inline-flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-sm text-slate-400 hover:text-white dark:hover:text-white hover:bg-white/[0.06] transition-colors duration-150;
+  }
+
+  .light .btn-ghost-glass {
+    @apply text-slate-600 hover:text-slate-900 hover:bg-black/[0.05];
+  }
+
+  /* Ambient Glowing Highlights */
+  .ambient-glow-cyan {
+    background: radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.25) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 80%);
+  }
+
+  .ambient-glow-violet {
+    background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0.05) 50%, transparent 80%);
+  }
+
+  /* Radial match dial animation ring */
+  .dial-ring {
+    stroke-dasharray: 100;
+    stroke-dashoffset: calc(100 - var(--match-score, 85));
+    transition: stroke-dashoffset 1s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   /* Custom scrollbar */
@@ -57,15 +93,19 @@
   }
   
   ::-webkit-scrollbar-track {
-    background: #101114;
+    background: transparent;
   }
   
   ::-webkit-scrollbar-thumb {
-    background: #303139;
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 9999px;
+  }
+
+  .light ::-webkit-scrollbar-thumb {
+    background: rgba(0, 0, 0, 0.15);
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    background: #E5A45C;
+    background: rgba(6, 182, 212, 0.6);
   }
 }
