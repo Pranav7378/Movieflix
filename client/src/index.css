@@ -1,0 +1,41 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-netflix-black text-white font-sans;
+  }
+}
+
+@layer components {
+  /* Netflix-style button */
+  .btn {
+    @apply px-6 py-2 rounded font-semibold transition-all duration-200 cursor-pointer;
+  }
+  
+  .btn-primary {
+    @apply bg-netflix-red hover:bg-red-700 text-white;
+  }
+  
+  .btn-secondary {
+    @apply bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm;
+  }
+  
+  /* Custom scrollbar */
+ ::-webkit-scrollbar {
+    @apply w-2 h-2;
+  }
+  
+  ::-webkit-scrollbar-track {
+    @apply bg-netflix-gray-dark;
+  }
+  
+  ::-webkit-scrollbar-thumb {
+    @apply bg-netflix-gray-medium rounded;
+  }
+  
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-netflix-gray-light;
+  }
+}

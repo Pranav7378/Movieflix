@@ -1,0 +1,31 @@
+# Render Blueprint — free-tier native Python backend for the movie recommender.
+# Docs: https://render.com/docs/blueprint-spec
+#
+# Deploy: push this repo to GitHub, then in Render choose
+# "New +" -> "Blueprint" and select the repo.
+#
+# `sync: false` means the value is not stored in Git; Render prompts for it
+# in the dashboard the first time the service is created.
+services:
+  - type: web
+    name: movieflix-api
+    runtime: python
+    plan: free
+    region: oregon
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn src.server.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: DATABASE_URL
+        sync: false
+      - key: OMDB_API_KEY
+        sync: false
+      - key: YOUTUBE_API_KEY
+        sync: false
+      - key: CORS_ORIGINS
+        sync: false
+      - key: ENABLE_TRAILERS
+        value: "true"
