@@ -115,3 +115,16 @@ async def get_current_owner(
 
     return user
 
+
+async def get_optional_owner(
+    auth_header: Annotated[Optional[HTTPAuthorizationCredentials], Security(security)],
+    db: Session = Depends(get_db),
+) -> Optional[User]:
+    """Gracefully resolve owner if Bearer token is provided, otherwise return None."""
+    if not auth_header or not auth_header.credentials:
+        return None
+    try:
+        return await get_current_owner(auth_header, db)
+    except HTTPException:
+        return None
+

@@ -123,6 +123,12 @@ class ContentItem(Base):
         Numeric(8, 3), default=Decimal("0.0")
     )
     is_adult: Mapped[bool] = mapped_column(Boolean, default=False)
+    metadata_source: Mapped[Optional[str]] = mapped_column(
+        String(50), nullable=True, default="local"
+    )
+    last_synced_at: Mapped[Optional[datetime]] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
     created_at: Mapped[datetime] = mapped_column(
         DateTime(timezone=True), default=utcnow
     )
@@ -258,7 +264,7 @@ class UserContentInteraction(Base):
 class Genre(Base):
     __tablename__ = "genres"
 
-    id: Mapped[int] = mapped_column(SmallInteger, primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
     name: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
     slug: Mapped[str] = mapped_column(String(50), unique=True, nullable=False)
 
@@ -276,7 +282,7 @@ class ContentGenre(Base):
         primary_key=True,
     )
     genre_id: Mapped[int] = mapped_column(
-        SmallInteger, ForeignKey("genres.id", ondelete="RESTRICT"), primary_key=True
+        Integer, ForeignKey("genres.id", ondelete="RESTRICT"), primary_key=True
     )
 
 

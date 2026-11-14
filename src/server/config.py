@@ -10,6 +10,7 @@ class Settings(BaseSettings):
     # External APIs
     OMDB_API_KEY: str = ""
     YOUTUBE_API_KEY: str = ""
+    TMDB_API_KEY: str = ""
     ENABLE_TRAILERS: bool = True
 
     # Single-User Owner Authentication (Firebase)

@@ -5,7 +5,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from .config import settings
 from .db.postgres import close_db, init_db
-from .routers import history, interactions, movies, watchlist
+from .routers import catalogue, history, interactions, movies, watchlist
 
 
 @asynccontextmanager
@@ -33,6 +33,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+app.include_router(catalogue.router)
 app.include_router(interactions.router)
 app.include_router(movies.router)
 app.include_router(watchlist.router)
