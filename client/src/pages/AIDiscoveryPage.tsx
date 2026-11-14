@@ -141,8 +141,8 @@ const AIDiscoveryPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#07080B] text-slate-100 flex flex-col relative overflow-hidden transition-colors">
             {/* Ambient Lighting Orbs */}
-            <div className="absolute top-10 left-1/4 w-96 h-96 rounded-full bg-cyan-500/15 blur-[130px] pointer-events-none -z-10" />
-            <div className="absolute top-60 right-1/4 w-[450px] h-[450px] rounded-full bg-violet-600/15 blur-[150px] pointer-events-none -z-10" />
+            <div className="absolute top-10 left-1/4 w-[420px] h-[420px] rounded-full bg-cyan-500/25 blur-[100px] pointer-events-none -z-10" />
+            <div className="absolute top-60 right-1/4 w-[480px] h-[480px] rounded-full bg-violet-600/25 blur-[120px] pointer-events-none -z-10" />
 
             <Navbar />
 

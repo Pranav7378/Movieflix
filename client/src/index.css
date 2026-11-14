@@ -6,14 +6,14 @@
   :root {
     --bg-main: #07080B;
     --text-main: #F8FAFC;
-    --card-glass: rgba(18, 22, 34, 0.7);
-    --border-glass: rgba(255, 255, 255, 0.08);
+    --card-glass: rgba(15, 20, 31, 0.85);
+    --border-glass: rgba(255, 255, 255, 0.14);
   }
 
   html.light {
     --bg-main: #F8FAFC;
     --text-main: #0F172A;
-    --card-glass: rgba(255, 255, 255, 0.85);
+    --card-glass: rgba(255, 255, 255, 0.88);
     --border-glass: rgba(0, 0, 0, 0.08);
   }
 
@@ -29,37 +29,37 @@
 @layer components {
   /* Frosted Glass Panels */
   .glass-card {
-    @apply backdrop-blur-xl bg-white/[0.04] dark:bg-white/[0.04] border border-white/10 dark:border-white/10 shadow-glass-card rounded-2xl transition-all duration-300;
+    @apply backdrop-blur-2xl bg-[#0D1017]/80 dark:bg-[#0D1017]/80 border border-white/15 dark:border-white/15 shadow-glass-card rounded-2xl transition-all duration-300;
   }
 
   .light .glass-card {
-    @apply bg-white/75 border-black/5 shadow-glass-card-light text-slate-800;
+    @apply bg-white/85 border-black/10 shadow-glass-card-light text-slate-800;
   }
 
   .glass-card-hover {
-    @apply glass-card hover:border-cyan-500/40 hover:shadow-glow-ambient hover:-translate-y-0.5;
+    @apply glass-card hover:border-cyan-400/50 hover:shadow-glow-cyan-sm hover:-translate-y-0.5;
   }
 
   /* Interactive Pill Navbars */
   .glass-nav {
-    @apply backdrop-blur-2xl bg-[#07080B]/80 dark:bg-[#07080B]/80 border border-white/10 dark:border-white/10 shadow-lg;
+    @apply backdrop-blur-2xl bg-[#07080B]/85 dark:bg-[#07080B]/85 border border-white/15 dark:border-white/15 shadow-glass-nav;
   }
 
   .light .glass-nav {
-    @apply bg-white/80 border-black/5 shadow-md;
+    @apply bg-white/85 border-black/10 shadow-md;
   }
 
   /* Buttons */
   .btn-gradient {
-    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm text-white bg-gradient-to-r from-cyan-500 via-violet-600 to-fuchsia-600 hover:from-cyan-400 hover:to-violet-500 shadow-glow-cyan hover:shadow-glow-cyan hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-medium text-sm text-white bg-gradient-to-r from-cyan-500 via-violet-600 to-fuchsia-600 hover:from-cyan-400 hover:to-violet-500 shadow-glow-cyan-sm hover:shadow-glow-cyan hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
   }
 
   .btn-glass {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm backdrop-blur-md bg-white/[0.06] dark:bg-white/[0.06] hover:bg-white/[0.12] dark:hover:bg-white/[0.12] text-white dark:text-white border border-white/10 dark:border-white/10 hover:border-cyan-500/40 transition-all duration-200 cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl font-medium text-sm backdrop-blur-md bg-white/[0.08] dark:bg-white/[0.08] hover:bg-white/[0.15] dark:hover:bg-white/[0.15] text-white dark:text-white border border-white/15 dark:border-white/15 hover:border-cyan-400/50 hover:shadow-glow-cyan-sm transition-all duration-200 cursor-pointer;
   }
 
   .light .btn-glass {
-    @apply bg-black/[0.04] hover:bg-black/[0.08] text-slate-800 border-black/10 hover:border-cyan-500/50;
+    @apply bg-black/[0.05] hover:bg-black/[0.09] text-slate-800 border-black/10 hover:border-cyan-500/50;
   }
 
   .btn-ghost-glass {
@@ -72,11 +72,11 @@
 
   /* Ambient Glowing Highlights */
   .ambient-glow-cyan {
-    background: radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.25) 0%, rgba(6, 182, 212, 0.05) 50%, transparent 80%);
+    background: radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.3) 0%, rgba(6, 182, 212, 0.08) 50%, transparent 80%);
   }
 
   .ambient-glow-violet {
-    background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.25) 0%, rgba(139, 92, 246, 0.05) 50%, transparent 80%);
+    background: radial-gradient(circle at 50% 50%, rgba(139, 92, 246, 0.3) 0%, rgba(139, 92, 246, 0.08) 50%, transparent 80%);
   }
 
   /* Radial match dial animation ring */
@@ -97,12 +97,12 @@
   }
   
   ::-webkit-scrollbar-thumb {
-    background: rgba(255, 255, 255, 0.15);
+    background: rgba(255, 255, 255, 0.18);
     border-radius: 9999px;
   }
 
   .light ::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.15);
+    background: rgba(0, 0, 0, 0.18);
   }
   
   ::-webkit-scrollbar-thumb:hover {

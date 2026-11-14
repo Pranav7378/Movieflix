@@ -48,8 +48,8 @@ const LandingPage: React.FC = () => {
     return (
         <div className="min-h-screen bg-[#07080B] text-slate-100 flex flex-col relative overflow-hidden transition-colors">
             {/* Ambient Lighting Orbs */}
-            <div className="absolute top-20 left-1/3 w-[500px] h-[500px] rounded-full bg-cyan-500/10 blur-[140px] pointer-events-none -z-10" />
-            <div className="absolute top-48 right-1/4 w-[450px] h-[450px] rounded-full bg-violet-600/15 blur-[150px] pointer-events-none -z-10" />
+            <div className="absolute top-20 left-1/3 w-[500px] h-[500px] rounded-full bg-cyan-500/25 blur-[110px] pointer-events-none -z-10" />
+            <div className="absolute top-48 right-1/4 w-[450px] h-[450px] rounded-full bg-violet-600/25 blur-[120px] pointer-events-none -z-10" />
 
             <Navbar />
 

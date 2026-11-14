@@ -83,10 +83,10 @@ const MovieCard: React.FC<MovieCardProps> = ({
             className="group relative flex-shrink-0 w-44 sm:w-48 md:w-52 cursor-pointer select-none transition-all duration-300"
         >
             {/* Ambient Bloom Glowing Backlight */}
-            <div className="absolute -inset-1.5 rounded-2xl bg-gradient-to-tr from-cyan-500/20 via-violet-500/20 to-fuchsia-500/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 -z-10 pointer-events-none" />
+            <div className="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-cyan-500/40 via-violet-500/35 to-fuchsia-500/30 blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10 pointer-events-none" />
 
             {/* Poster Card Container */}
-            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-2xl bg-[#0D1017] border border-white/10 dark:border-white/10 group-hover:border-cyan-400/50 shadow-[0_10px_25px_rgba(0,0,0,0.5)] transition-all duration-300">
+            <div className="relative aspect-[2/3] w-full overflow-hidden rounded-2xl bg-[#0D1017] border border-white/15 dark:border-white/15 group-hover:border-cyan-400/70 group-hover:shadow-glow-cyan-sm shadow-[0_10px_25px_rgba(0,0,0,0.5)] transition-all duration-300">
                 {/* Poster Image */}
                 <img
                     src={posterUrl}
@@ -101,7 +101,7 @@ const MovieCard: React.FC<MovieCardProps> = ({
 
                 {/* Top-Left: Radial Match Dial or Glowing AI Capsule */}
                 {(showMatchBadge || matchScore) && (
-                    <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full backdrop-blur-md bg-[#07080B]/80 border border-cyan-400/40 shadow-glow-cyan">
+                    <div className="absolute top-2.5 left-2.5 z-10 flex items-center gap-1.5 px-2.5 py-1 rounded-full backdrop-blur-md bg-[#07080B]/85 border border-cyan-400/50 shadow-glow-pill">
                         <div className="relative w-3.5 h-3.5 flex items-center justify-center">
                             <span className="w-2 h-2 rounded-full bg-cyan-400 animate-pulse" />
                         </div>

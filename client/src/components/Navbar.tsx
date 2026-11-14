@@ -47,20 +47,20 @@ const Navbar: React.FC = () => {
 
     return (
         <header className="sticky top-0 w-full z-40 px-3 sm:px-6 lg:px-8 pt-3 pb-2 transition-all">
-            <div className="max-w-7xl mx-auto rounded-2xl backdrop-blur-2xl bg-[#07080B]/70 dark:bg-[#07080B]/70 border border-white/10 dark:border-white/10 shadow-[0_8px_32px_0_rgba(0,0,0,0.37)] px-4 sm:px-6 h-16 flex items-center justify-between transition-all">
+            <div className="max-w-7xl mx-auto rounded-2xl backdrop-blur-2xl bg-[#080B12]/85 dark:bg-[#080B12]/85 border border-white/15 dark:border-white/15 shadow-glass-nav px-4 sm:px-6 h-16 flex items-center justify-between transition-all">
                 {/* Brand Logo */}
                 <div className="flex items-center space-x-6 lg:space-x-8">
                     <Link to={isAuthenticated ? "/home" : "/"} className="flex items-center gap-2.5 group">
-                        <div className="relative w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 via-violet-600 to-fuchsia-500 p-[1.5px] shadow-glow-cyan group-hover:shadow-glow-cyan transition-shadow">
+                        <div className="relative w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-400 via-violet-500 to-fuchsia-500 p-[1.5px] shadow-glow-cyan-sm group-hover:shadow-glow-cyan transition-shadow">
                             <div className="w-full h-full bg-[#07080B] rounded-[10px] flex items-center justify-center">
-                                <span className="text-transparent bg-clip-text bg-gradient-to-tr from-cyan-400 to-violet-400 font-black text-sm">
+                                <span className="text-transparent bg-clip-text bg-gradient-to-tr from-cyan-300 to-violet-300 font-black text-sm">
                                     C
                                 </span>
                             </div>
                         </div>
                         <div className="flex flex-col">
-                            <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white flex items-center gap-1 font-display">
-                                CINE<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-violet-400">CUE</span>
+                            <span className="font-extrabold text-lg sm:text-xl tracking-tight text-white font-display">
+                                CINE<span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-violet-400 to-fuchsia-400">CUE</span>
                             </span>
                         </div>
                     </Link>
