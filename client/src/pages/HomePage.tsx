@@ -113,10 +113,13 @@ const HomePage: React.FC = () => {
 
             <Navbar />
 
-            {/* Spatial Hero Section */}
-            <div className="relative w-full">
-                {/* Hero Backdrop Image with Ambient Bloom */}
-                <div className="relative h-[520px] sm:h-[580px] md:h-[640px] w-full overflow-hidden">
+            {/* Cinematic Framed Billboard (Netflix Style) */}
+            <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-2 sm:pt-4">
+                <div className="relative w-full h-[520px] sm:h-[580px] md:h-[640px] lg:h-[680px] rounded-[28px] sm:rounded-[36px] overflow-hidden border border-white/10 shadow-[0_25px_70px_-15px_rgba(0,0,0,0.9)] group">
+                    {/* Ambient Aura behind the framed billboard */}
+                    <div className="absolute -inset-1 rounded-[36px] bg-gradient-to-r from-cyan-500/20 via-violet-600/15 to-transparent blur-2xl opacity-60 pointer-events-none -z-10" />
+
+                    {/* Hero Backdrop Image with Scale on Hover */}
                     <img
                         src={
                             featuredMovie?.Poster && featuredMovie.Poster !== 'N/A'
@@ -124,114 +127,126 @@ const HomePage: React.FC = () => {
                                 : "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=80"
                         }
                         alt={featuredMovie?.Title || "Featured Movie"}
-                        className="w-full h-full object-cover object-top filter brightness-[0.38] contrast-125 scale-105"
+                        className="w-full h-full object-cover object-center sm:object-top filter brightness-[0.85] contrast-[1.08] transition-transform duration-1000 ease-out group-hover:scale-105"
                     />
 
-                    {/* Gradient Fades for depth */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[#07080B] via-[#07080B]/60 to-transparent" />
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#07080B] via-[#07080B]/80 to-transparent" />
+                    {/* Atmospheric Vignette Gradients (Cinematic Scene Integration) */}
+                    {/* Left horizontal vignette for crisp text contrast */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#07080B] via-[#07080B]/80 sm:via-[#07080B]/60 to-transparent w-full md:w-[75%]" />
+                    {/* Bottom vertical vignette */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-[#07080B] via-[#07080B]/40 to-transparent" />
+                    {/* Top subtle vignette */}
+                    <div className="absolute inset-0 bg-gradient-to-b from-[#07080B]/60 via-transparent to-transparent" />
 
-                    {/* Spatial Glass Metadata Card Overlay */}
-                    <div className="absolute inset-0 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col justify-end pb-12 sm:pb-16 z-10">
-                        <div className="relative max-w-2xl">
-                            {/* Ambient Glow Aura */}
-                            <div className="absolute -inset-1 rounded-[32px] bg-gradient-to-r from-cyan-500/40 via-violet-500/30 to-fuchsia-500/20 blur-xl opacity-85 pointer-events-none" />
+                    {/* Content Overlay directly integrated into the cinematic scene */}
+                    <div className="absolute inset-0 p-6 sm:p-10 md:p-14 flex flex-col justify-end z-10">
+                        <div className="max-w-2xl">
+                            {/* Stylized Movie Title */}
+                            <h1 className="text-3xl sm:text-5xl md:text-6xl font-black text-white tracking-tight leading-[1.08] mb-3.5 drop-shadow-[0_4px_24px_rgba(0,0,0,0.95)] font-display">
+                                {featuredMovie?.Title || "Discover Exceptional Cinema"}
+                            </h1>
 
-                            <div className="relative backdrop-blur-2xl bg-[#080C14]/85 border border-white/20 p-6 sm:p-8 rounded-3xl shadow-glass-hero">
-                                {/* Meta Badges */}
-                                <div className="flex flex-wrap items-center gap-2.5 mb-3.5">
-                                    {/* Glowing Match Dial Capsule */}
-                                    <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-cyan-500/20 border border-cyan-400/60 text-cyan-300 text-xs font-bold shadow-glow-pill">
-                                        <FaBolt className="text-[10px] text-cyan-400 animate-pulse" />
-                                        <span>98% CineCue Match</span>
-                                    </div>
-
-                                    {featuredMovie?.imdbRating && (
-                                        <span className="flex items-center gap-1 px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15 text-amber-300 text-xs font-semibold">
-                                            <FaStar className="text-[10px] text-amber-400" />
+                            {/* Clean Inline Metadata Line (Netflix Style) */}
+                            <div className="flex flex-wrap items-center gap-2 sm:gap-2.5 text-xs sm:text-sm font-medium text-slate-300 drop-shadow mb-3.5">
+                                <span className="capitalize">{featuredMovie?.Type || 'Film'}</span>
+                                <span className="text-slate-500">•</span>
+                                <span>{featuredMovie?.Genre?.split(',')[0] || 'Action'}</span>
+                                <span className="text-slate-500">•</span>
+                                <span>{featuredMovie?.Year || '2024'}</span>
+                                {featuredMovie?.Runtime && (
+                                    <>
+                                        <span className="text-slate-500">•</span>
+                                        <span>{featuredMovie.Runtime}</span>
+                                    </>
+                                )}
+                                {featuredMovie?.imdbRating && (
+                                    <>
+                                        <span className="text-slate-500">•</span>
+                                        <span className="flex items-center gap-1 text-amber-300 font-semibold">
+                                            <FaStar className="text-[11px] text-amber-400" />
                                             {featuredMovie.imdbRating}
                                         </span>
-                                    )}
+                                    </>
+                                )}
+                                <span className="text-slate-500">•</span>
+                                <span className="flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-cyan-500/20 text-cyan-300 font-bold text-xs border border-cyan-400/40 shadow-glow-pill">
+                                    <FaBolt className="text-[10px] text-cyan-400 animate-pulse" />
+                                    <span>98% CineCue Match</span>
+                                </span>
+                            </div>
 
-                                    {featuredMovie?.Year && (
-                                        <span className="px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15 text-slate-300 text-xs">
-                                            {featuredMovie.Year}
-                                        </span>
-                                    )}
+                            {/* Synopsis / Overview */}
+                            <p className="text-xs sm:text-sm md:text-base text-slate-200/95 line-clamp-3 leading-relaxed mb-6 sm:mb-8 drop-shadow-[0_2px_10px_rgba(0,0,0,0.95)] max-w-xl">
+                                {featuredMovie?.Plot && featuredMovie.Plot !== 'N/A'
+                                    ? featuredMovie.Plot
+                                    : "Discover your next favourite film with intelligent recommendations tailored to what you love watching."}
+                            </p>
 
-                                    {featuredMovie?.Genre && (
-                                        <span className="px-2.5 py-1 rounded-full bg-white/[0.08] border border-white/15 text-slate-300 text-xs">
-                                            {featuredMovie.Genre.split(',')[0]}
-                                        </span>
-                                    )}
-                                </div>
-
-                                {/* Title */}
-                                <h1 className="text-3xl sm:text-5xl font-black text-white tracking-tight leading-tight mb-3 font-display">
-                                    {featuredMovie?.Title || "Discover Exceptional Cinema"}
-                                </h1>
-
-                                {/* Synopsis */}
-                                <p className="text-xs sm:text-sm text-slate-300 line-clamp-3 mb-6 max-w-xl leading-relaxed">
-                                    {featuredMovie?.Plot && featuredMovie.Plot !== 'N/A'
-                                        ? featuredMovie.Plot
-                                        : "Discover your next favourite film with intelligent recommendations tailored to what you love watching."}
-                                </p>
-
-                                {/* CTA Action Buttons */}
-                                <div className="flex flex-wrap items-center gap-3">
-                                    {featuredMovie?.trailer_url ? (
-                                        <button
-                                            onClick={() => setShowTrailerModal(true)}
-                                            className="btn-gradient px-6 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2"
-                                        >
-                                            <FaPlay className="text-xs" />
-                                            <span>Watch Trailer</span>
-                                        </button>
-                                    ) : (
-                                        <button
-                                            onClick={() => navigate(`/movie/${featuredMovie?.imdbID}`)}
-                                            className="btn-gradient px-6 py-2.5 rounded-xl font-semibold text-sm flex items-center gap-2"
-                                        >
-                                            <FaPlay className="text-xs" />
-                                            <span>Watch Trailer</span>
-                                        </button>
-                                    )}
-
+                            {/* Action Buttons (Netflix Style Pills) */}
+                            <div className="flex flex-wrap items-center gap-3">
+                                {featuredMovie?.trailer_url ? (
                                     <button
-                                        onClick={handleFeaturedWatchlistToggle}
-                                        className={`btn-glass px-5 py-2.5 rounded-xl text-sm transition-all flex items-center gap-2 ${
-                                            isFeaturedInWatchlist
-                                                ? 'bg-cyan-500/25 text-cyan-300 border-cyan-400/60 shadow-glow-pill'
-                                                : ''
-                                        }`}
+                                        onClick={() => setShowTrailerModal(true)}
+                                        className="bg-white hover:bg-slate-100 text-slate-900 font-bold px-7 py-3 rounded-full flex items-center gap-2.5 shadow-[0_4px_25px_rgba(255,255,255,0.3)] active:scale-95 transition-all text-sm sm:text-base group/btn cursor-pointer"
                                     >
-                                        {isFeaturedInWatchlist ? <FaCheck className="text-cyan-400" /> : <FaBookmark />}
-                                        <span>{isFeaturedInWatchlist ? 'In Watchlist' : '+ Watchlist'}</span>
+                                        <FaPlay className="text-xs text-slate-900 transition-transform group-hover/btn:scale-110" />
+                                        <span>Watch Trailer</span>
                                     </button>
+                                ) : (
+                                    <button
+                                        onClick={() => navigate(`/movie/${featuredMovie?.imdbID}`)}
+                                        className="bg-white hover:bg-slate-100 text-slate-900 font-bold px-7 py-3 rounded-full flex items-center gap-2.5 shadow-[0_4px_25px_rgba(255,255,255,0.3)] active:scale-95 transition-all text-sm sm:text-base group/btn cursor-pointer"
+                                    >
+                                        <FaPlay className="text-xs text-slate-900 transition-transform group-hover/btn:scale-110" />
+                                        <span>Watch Trailer</span>
+                                    </button>
+                                )}
 
-                                    {featuredMovie && (
-                                        <button
-                                            onClick={() => navigate(`/movie/${featuredMovie.imdbID}`)}
-                                            className="btn-glass px-4 py-2.5 rounded-xl text-sm flex items-center gap-1.5"
-                                        >
-                                            <FaInfoCircle />
-                                            <span>Details</span>
-                                        </button>
-                                    )}
-                                </div>
+                                {featuredMovie && (
+                                    <button
+                                        onClick={() => navigate(`/movie/${featuredMovie.imdbID}`)}
+                                        className="bg-white/20 hover:bg-white/30 text-white font-semibold px-6 py-3 rounded-full backdrop-blur-md border border-white/25 flex items-center gap-2 active:scale-95 transition-all text-sm sm:text-base cursor-pointer"
+                                    >
+                                        <FaInfoCircle className="text-sm" />
+                                        <span>More Info</span>
+                                    </button>
+                                )}
+
+                                <button
+                                    onClick={handleFeaturedWatchlistToggle}
+                                    className={`px-5 py-3 rounded-full backdrop-blur-md border transition-all text-sm sm:text-base flex items-center gap-2 active:scale-95 cursor-pointer ${
+                                        isFeaturedInWatchlist
+                                            ? 'bg-cyan-500/25 text-cyan-200 border-cyan-400/50 shadow-glow-pill'
+                                            : 'bg-white/10 hover:bg-white/20 text-white border-white/15'
+                                    }`}
+                                >
+                                    {isFeaturedInWatchlist ? <FaCheck className="text-cyan-400 text-xs" /> : <FaBookmark className="text-xs" />}
+                                    <span>{isFeaturedInWatchlist ? 'In Watchlist' : '+ Watchlist'}</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        {/* Right-aligned Badges (Matching Netflix Showcase) */}
+                        <div className="hidden md:flex items-center gap-2.5 absolute bottom-8 sm:bottom-10 right-6 sm:right-10 z-10 pointer-events-none">
+                            <div className="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-slate-300 text-xs font-medium flex items-center gap-2 shadow-xl">
+                                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                                <span>4K Ultra HD • 5.1 Audio</span>
+                            </div>
+                            <div className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-red-600 to-rose-700 text-white text-xs font-black tracking-wider flex items-center gap-1.5 shadow-xl border border-red-400/30">
+                                <span className="text-[9px] bg-white text-red-600 px-1 py-0.5 rounded font-black tracking-normal">TOP 10</span>
+                                <span>#1 in CineCue</span>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 {/* Natural Language AI Prompt Bar */}
-                <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 -mt-6 relative z-20">
+                <div className="relative z-20 mt-6 sm:mt-8">
                     <div className="relative">
-                        <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-cyan-500/35 via-violet-500/25 to-fuchsia-500/15 blur-lg opacity-75 pointer-events-none" />
+                        <div className="absolute -inset-0.5 rounded-2xl bg-gradient-to-r from-cyan-500/30 via-violet-500/20 to-fuchsia-500/10 blur-lg opacity-60 pointer-events-none" />
                         <form 
                             onSubmit={handleHeroSearch}
-                            className="relative backdrop-blur-2xl bg-[#090D15]/90 border border-white/20 focus-within:border-cyan-400/90 focus-within:shadow-glow-cyan-sm p-2 rounded-2xl shadow-[0_10px_35px_rgba(0,0,0,0.6)] transition-all flex items-center gap-3"
+                            className="relative backdrop-blur-2xl bg-[#090D15]/85 border border-white/15 focus-within:border-cyan-400/90 focus-within:shadow-glow-cyan-sm p-1.5 sm:p-2 rounded-2xl shadow-xl transition-all flex items-center gap-3"
                         >
                             <div className="pl-3 text-cyan-400 animate-pulse">
                                 <FaMagic />
@@ -245,9 +260,9 @@ const HomePage: React.FC = () => {
                             />
                             <button
                                 type="submit"
-                                className="btn-gradient px-5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap"
+                                className="btn-gradient px-5 py-2 rounded-xl text-xs font-semibold whitespace-nowrap cursor-pointer"
                             >
-                                AI Synapse Search
+                                AI Search
                             </button>
                         </form>
                     </div>
@@ -259,7 +274,7 @@ const HomePage: React.FC = () => {
                             <button
                                 key={idx}
                                 onClick={() => handlePromptClick(suggestion)}
-                                className="px-3 py-1 rounded-full backdrop-blur-md bg-white/[0.04] border border-white/10 text-slate-300 hover:text-cyan-300 hover:border-cyan-400/40 hover:bg-cyan-500/10 transition text-[11px]"
+                                className="px-3 py-1 rounded-full backdrop-blur-md bg-white/[0.04] border border-white/10 text-slate-300 hover:text-cyan-300 hover:border-cyan-400/40 hover:bg-cyan-500/10 transition text-[11px] cursor-pointer"
                             >
                                 {suggestion}
                             </button>

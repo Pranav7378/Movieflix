@@ -70,20 +70,20 @@ const Navbar: React.FC = () => {
                         <nav className="hidden md:flex items-center space-x-1 text-sm font-medium">
                             <Link 
                                 to="/home" 
-                                className={`px-3 py-1.5 rounded-xl transition-all ${
+                                className={`px-4 py-1.5 rounded-full transition-all ${
                                     isActive('/home')
-                                        ? 'text-white bg-white/10 shadow-sm border border-white/15'
-                                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                        ? 'text-white bg-white/15 font-semibold shadow-sm border border-white/20'
+                                        : 'text-slate-300 hover:text-white hover:bg-white/5'
                                 }`}
                             >
                                 Discover
                             </Link>
                             <Link 
                                 to="/ai-discovery" 
-                                className={`px-3.5 py-1.5 rounded-xl flex items-center gap-1.5 transition-all relative group ${
+                                className={`px-4 py-1.5 rounded-full flex items-center gap-1.5 transition-all relative group ${
                                     isActive('/ai-discovery')
-                                        ? 'text-cyan-300 bg-cyan-500/15 border border-cyan-500/30 shadow-glow-cyan'
-                                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                        ? 'text-cyan-300 bg-cyan-500/20 font-semibold border border-cyan-400/40 shadow-glow-pill'
+                                        : 'text-slate-300 hover:text-white hover:bg-white/5'
                                 }`}
                             >
                                 <FaMagic className="text-xs text-cyan-400 animate-pulse" />
@@ -91,10 +91,10 @@ const Navbar: React.FC = () => {
                             </Link>
                             <Link 
                                 to="/watchlist" 
-                                className={`px-3 py-1.5 rounded-xl flex items-center gap-1.5 transition-all ${
+                                className={`px-4 py-1.5 rounded-full flex items-center gap-1.5 transition-all ${
                                     isActive('/watchlist')
-                                        ? 'text-white bg-white/10 shadow-sm border border-white/15'
-                                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                        ? 'text-white bg-white/15 font-semibold shadow-sm border border-white/20'
+                                        : 'text-slate-300 hover:text-white hover:bg-white/5'
                                 }`}
                             >
                                 <span>Watchlist</span>
@@ -106,10 +106,10 @@ const Navbar: React.FC = () => {
                             </Link>
                             <Link 
                                 to="/watched" 
-                                className={`px-3 py-1.5 rounded-xl transition-all ${
+                                className={`px-4 py-1.5 rounded-full transition-all ${
                                     isActive('/watched')
-                                        ? 'text-white bg-white/10 shadow-sm border border-white/15'
-                                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                        ? 'text-white bg-white/15 font-semibold shadow-sm border border-white/20'
+                                        : 'text-slate-300 hover:text-white hover:bg-white/5'
                                 }`}
                             >
                                 Watched
