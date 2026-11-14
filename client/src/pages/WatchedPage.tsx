@@ -25,10 +25,19 @@ const WatchedPage: React.FC = () => {
     const [toastMessage] = useState<string | null>(null);
     const [metaCache, setMetaCache] = useState<Record<string, MovieMeta>>({});
     const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
+    const [userRatings, setUserRatings] = useState<Record<string, number>>({});
 
     useEffect(() => {
         if (user) {
             dispatch(fetchHistory(user.uid));
+        }
+
+        // Load personal ratings from localStorage
+        try {
+            const saved = JSON.parse(localStorage.getItem('cinecue_user_ratings') || '{}');
+            setUserRatings(saved);
+        } catch {
+            setUserRatings({});
         }
     }, [dispatch, user]);
 
@@ -185,11 +194,18 @@ const WatchedPage: React.FC = () => {
                                             <div className="flex items-center justify-between text-[11px] text-slate-300 mt-1">
                                                 <div className="flex items-center gap-1.5">
                                                     {year && <span>{year}</span>}
-                                                    {rating && rating !== 'N/A' && (
-                                                        <span className="flex items-center gap-0.5 text-amber-300 font-semibold">
+                                                    {userRatings[item.imdb_id] ? (
+                                                        <span className="flex items-center gap-1 px-1.5 py-0.5 rounded-md bg-amber-500/20 text-amber-300 font-bold text-[10px] border border-amber-400/40 shadow-sm">
                                                             <FaStar className="text-[9px] text-amber-400" />
-                                                            {rating}
+                                                            <span>{userRatings[item.imdb_id]} / 5</span>
                                                         </span>
+                                                    ) : rating && rating !== 'N/A' ? (
+                                                        <span className="flex items-center gap-0.5 text-slate-400 font-medium text-[10px]">
+                                                            <FaStar className="text-[9px] text-amber-400/70" />
+                                                            <span>{rating}</span>
+                                                        </span>
+                                                    ) : (
+                                                        <span className="text-[10px] text-slate-500 italic">Unrated</span>
                                                     )}
                                                 </div>
                                             </div>

@@ -44,6 +44,18 @@ const MovieDetailsPage: React.FC = () => {
         if (id) {
             dispatch(fetchMovieDetails(id));
             dispatch(fetchRecommendations(id));
+
+            // Load saved personal rating from localStorage
+            try {
+                const savedRatings = JSON.parse(localStorage.getItem('cinecue_user_ratings') || '{}');
+                if (savedRatings[id]) {
+                    setPersonalRating(Number(savedRatings[id]));
+                } else {
+                    setPersonalRating(0);
+                }
+            } catch {
+                setPersonalRating(0);
+            }
         }
     }, [dispatch, id]);
 
@@ -91,6 +103,15 @@ const MovieDetailsPage: React.FC = () => {
 
     const handleRatingClick = (stars: number) => {
         setPersonalRating(stars);
+        if (id) {
+            try {
+                const savedRatings = JSON.parse(localStorage.getItem('cinecue_user_ratings') || '{}');
+                savedRatings[id] = stars;
+                localStorage.setItem('cinecue_user_ratings', JSON.stringify(savedRatings));
+            } catch (err) {
+                console.error('Failed to persist rating:', err);
+            }
+        }
         setToastMessage(`Rated ${stars} / 5 stars`);
     };
 
