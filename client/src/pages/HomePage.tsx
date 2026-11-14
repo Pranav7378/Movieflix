@@ -88,16 +88,20 @@ const HomePage: React.FC = () => {
     const handleFeaturedWatchlistToggle = async () => {
         if (!user || !featuredMovie) return;
 
-        if (isFeaturedInWatchlist) {
-            await dispatch(removeFromWatchlist({ userId: user.uid, imdbId: featuredMovie.imdbID }));
-            setToastMessage('Removed from My Watchlist');
-        } else {
-            await dispatch(addToWatchlist({
-                userId: user.uid,
-                imdbId: featuredMovie.imdbID,
-                movieTitle: featuredMovie.Title,
-            }));
-            setToastMessage('Added to My Watchlist');
+        try {
+            if (isFeaturedInWatchlist) {
+                await dispatch(removeFromWatchlist({ userId: user.uid, imdbId: featuredMovie.imdbID })).unwrap();
+                setToastMessage('Removed from My Watchlist');
+            } else {
+                await dispatch(addToWatchlist({
+                    userId: user.uid,
+                    imdbId: featuredMovie.imdbID,
+                    movieTitle: featuredMovie.Title,
+                })).unwrap();
+                setToastMessage('Added to My Watchlist');
+            }
+        } catch {
+            setToastMessage('Failed to update Watchlist. Please try again.');
         }
     };
 
@@ -330,18 +334,22 @@ const HomePage: React.FC = () => {
 
             {/* Embedded Trailer Modal */}
             {showTrailerModal && featuredMovie?.trailer_url && (
-                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-md animate-in fade-in duration-200">
-                    <div className="relative w-full max-w-4xl backdrop-blur-2xl bg-[#07080B]/95 border border-white/20 rounded-3xl overflow-hidden shadow-[0_25px_60px_rgba(0,0,0,0.8)]">
-                        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/[0.02]">
+                <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/85 p-4 backdrop-blur-xl animate-in fade-in duration-300">
+                    {/* Ambient Glow behind modal */}
+                    <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                        <div className="w-[550px] h-[350px] bg-gradient-to-r from-cyan-500/25 via-violet-600/25 to-fuchsia-600/20 blur-[100px] rounded-full" />
+                    </div>
+                    <div className="relative w-full max-w-4xl backdrop-blur-2xl bg-[#080B12]/95 border border-white/20 rounded-3xl overflow-hidden shadow-[0_30px_70px_rgba(0,0,0,0.9),0_0_40px_rgba(6,182,212,0.2)] transform transition-all duration-300 animate-in zoom-in-95">
+                        <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-white/[0.03]">
                             <h3 className="font-bold text-base text-white flex items-center gap-2">
                                 <span className="text-cyan-400">▶</span>
-                                {featuredMovie.Title} — Official Trailer
+                                {featuredMovie.Title} — Official 4K Trailer
                             </h3>
                             <button
                                 onClick={() => setShowTrailerModal(false)}
-                                className="text-slate-400 hover:text-white p-1.5 rounded-xl hover:bg-white/10 transition"
+                                className="text-slate-400 hover:text-white p-2 rounded-xl hover:bg-white/10 transition-colors cursor-pointer"
                             >
-                                <FaTimes size={18} />
+                                <FaTimes size={16} />
                             </button>
                         </div>
                         <div className="aspect-video w-full bg-black">

@@ -59,6 +59,7 @@ export default {
                 'glow-violet-sm': '0 0 15px 1px rgba(139, 92, 246, 0.35)',
                 'glow-amber': '0 0 25px -2px rgba(245, 158, 11, 0.45)',
                 'glow-emerald': '0 0 25px -2px rgba(16, 185, 129, 0.45)',
+                'glow-rose': '0 0 25px -2px rgba(244, 63, 94, 0.45)',
                 'glow-ambient': '0 0 35px 2px rgba(6, 182, 212, 0.3), 0 0 65px 10px rgba(139, 92, 246, 0.22)',
                 'glow-pill': '0 0 16px 1px rgba(6, 182, 212, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.2)',
                 'glass-hero': '0 25px 50px -12px rgba(0, 0, 0, 0.8), 0 0 35px -5px rgba(6, 182, 212, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.15)',
@@ -71,6 +72,25 @@ export default {
                 'glass-gradient-light': 'linear-gradient(135deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%)',
                 'accent-gradient': 'linear-gradient(135deg, #06B6D4 0%, #8B5CF6 100%)',
                 'accent-glow': 'radial-gradient(circle at 50% 50%, rgba(6, 182, 212, 0.25) 0%, rgba(139, 92, 246, 0.1) 50%, transparent 100%)',
+            },
+            keyframes: {
+                'toast-in': {
+                    '0%': { transform: 'translateY(20px) scale(0.95)', opacity: '0' },
+                    '100%': { transform: 'translateY(0) scale(1)', opacity: '1' },
+                },
+                'toast-out': {
+                    '0%': { transform: 'translateY(0) scale(1)', opacity: '1' },
+                    '100%': { transform: 'translateY(16px) scale(0.95)', opacity: '0' },
+                },
+                'pulse-glow': {
+                    '0%, 100%': { opacity: '0.8', transform: 'scale(1)' },
+                    '50%': { opacity: '1', transform: 'scale(1.02)' },
+                },
+            },
+            animation: {
+                'toast-in': 'toast-in 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards',
+                'toast-out': 'toast-out 0.22s cubic-bezier(0.4, 0, 1, 1) forwards',
+                'pulse-glow': 'pulse-glow 3s ease-in-out infinite',
             }
         },
     },

@@ -53,9 +53,9 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({
                 <button
                     onClick={() => scroll('left')}
                     aria-label="Scroll left"
-                    className="absolute left-2 sm:left-4 top-[40%] -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#07080B]/80 text-white border border-white/20 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-glow-cyan flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all duration-200 shadow-xl backdrop-blur-md"
+                    className="absolute left-2 sm:left-4 top-[40%] -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-[#080B12]/90 text-white border border-white/20 hover:border-cyan-400 hover:text-cyan-300 hover:shadow-glow-cyan flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transform hover:scale-110 active:scale-90 transition-all duration-300 shadow-2xl backdrop-blur-xl cursor-pointer"
                 >
-                    <FaChevronLeft className="text-xs" />
+                    <FaChevronLeft className="text-sm" />
                 </button>
 
                 {/* Items Row */}
@@ -82,9 +82,9 @@ const MovieCarousel: React.FC<MovieCarouselProps> = ({
                 <button
                     onClick={() => scroll('right')}
                     aria-label="Scroll right"
-                    className="absolute right-2 sm:right-4 top-[40%] -translate-y-1/2 z-20 w-10 h-10 rounded-full bg-[#07080B]/80 text-white border border-white/20 hover:border-cyan-400 hover:text-cyan-400 hover:shadow-glow-cyan flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transition-all duration-200 shadow-xl backdrop-blur-md"
+                    className="absolute right-2 sm:right-4 top-[40%] -translate-y-1/2 z-20 w-11 h-11 rounded-full bg-[#080B12]/90 text-white border border-white/20 hover:border-cyan-400 hover:text-cyan-300 hover:shadow-glow-cyan flex items-center justify-center opacity-0 group-hover/carousel:opacity-100 transform hover:scale-110 active:scale-90 transition-all duration-300 shadow-2xl backdrop-blur-xl cursor-pointer"
                 >
-                    <FaChevronRight className="text-xs" />
+                    <FaChevronRight className="text-sm" />
                 </button>
             </div>
         </section>
