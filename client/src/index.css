@@ -4,38 +4,68 @@
 
 @layer base {
   body {
-    @apply bg-netflix-black text-white font-sans;
+    @apply bg-cinecue-bg text-cinecue-text font-sans antialiased selection:bg-cinecue-amber/30 selection:text-white;
+    background-color: #101114;
+    color: #F5F5F5;
   }
 }
 
 @layer components {
-  /* Netflix-style button */
+  /* CINECUE Button System */
   .btn {
-    @apply px-6 py-2 rounded font-semibold transition-all duration-200 cursor-pointer;
+    @apply inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-lg font-medium text-sm transition-all duration-200 cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed;
   }
   
   .btn-primary {
-    @apply bg-netflix-red hover:bg-red-700 text-white;
+    @apply bg-cinecue-amber text-[#101114] font-semibold hover:bg-cinecue-amber-hover shadow-sm hover:shadow-amber-glow;
   }
   
   .btn-secondary {
-    @apply bg-white/20 hover:bg-white/30 text-white backdrop-blur-sm;
+    @apply bg-cinecue-surface hover:bg-cinecue-surface-light text-cinecue-text border border-cinecue-border hover:border-cinecue-amber/40;
   }
-  
+
+  .btn-crimson {
+    @apply bg-cinecue-crimson text-white hover:bg-cinecue-crimson-hover;
+  }
+
+  .btn-ghost {
+    @apply bg-transparent hover:bg-white/5 text-cinecue-muted hover:text-cinecue-text;
+  }
+
+  /* Surface Cards */
+  .card-surface {
+    @apply bg-cinecue-surface border border-cinecue-border rounded-xl;
+  }
+
+  .card-surface-hover {
+    @apply bg-cinecue-surface border border-cinecue-border hover:border-cinecue-border-light rounded-xl transition-all duration-200;
+  }
+
+  /* Badge Pills */
+  .badge-amber {
+    @apply bg-cinecue-amber/15 text-cinecue-amber border border-cinecue-amber/30 px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-muted {
+    @apply bg-cinecue-surface-light/80 text-cinecue-muted border border-cinecue-border px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+
   /* Custom scrollbar */
- ::-webkit-scrollbar {
-    @apply w-2 h-2;
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
   }
   
   ::-webkit-scrollbar-track {
-    @apply bg-netflix-gray-dark;
+    background: #101114;
   }
   
   ::-webkit-scrollbar-thumb {
-    @apply bg-netflix-gray-medium rounded;
+    background: #303139;
+    border-radius: 9999px;
   }
   
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-netflix-gray-light;
+    background: #E5A45C;
   }
 }

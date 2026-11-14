@@ -14,7 +14,9 @@ import HomePage from './pages/HomePage';
 import MovieDetailsPage from './pages/MovieDetailsPage';
 import ProfilePage from './pages/ProfilePage';
 import WatchlistPage from './pages/WatchlistPage';
+import WatchedPage from './pages/WatchedPage';
 import SearchPage from './pages/SearchPage';
+import AIDiscoveryPage from './pages/AIDiscoveryPage';
 
 // Protected Route Component
 interface ProtectedRouteProps {
@@ -26,8 +28,11 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
 
     if (!initialized) {
         return (
-            <div className="min-h-screen bg-netflix-black flex items-center justify-center">
-                <div className="text-white text-xl">Loading...</div>
+            <div className="min-h-screen bg-[#101114] flex flex-col items-center justify-center">
+                <div className="w-10 h-10 rounded-full border-2 border-cinecue-amber/20 border-t-cinecue-amber animate-spin mb-4" />
+                <div className="text-cinecue-muted text-sm font-semibold tracking-wider uppercase font-sans">
+                    CINECUE
+                </div>
             </div>
         );
     }
@@ -59,12 +64,13 @@ function App() {
 
     return (
         <Router>
-            <div className="App">
+            <div className="App min-h-screen bg-[#101114] text-white">
                 <Routes>
                     {/* Public Routes */}
                     <Route path="/" element={<LandingPage />} />
                     <Route path="/login" element={<LoginPage />} />
                     <Route path="/signup" element={<SignupPage />} />
+                    <Route path="/ai-discovery" element={<AIDiscoveryPage />} />
 
                     {/* Protected Routes */}
                     <Route
@@ -96,6 +102,14 @@ function App() {
                         element={
                             <ProtectedRoute>
                                 <WatchlistPage />
+                            </ProtectedRoute>
+                        }
+                    />
+                    <Route
+                        path="/watched"
+                        element={
+                            <ProtectedRoute>
+                                <WatchedPage />
                             </ProtectedRoute>
                         }
                     />
