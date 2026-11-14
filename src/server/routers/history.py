@@ -65,16 +65,26 @@ def get_history(
     user_id: str,
     db: Session = Depends(get_db),
 ) -> list[dict[str, Any]]:
-    """Get the user's viewing history (raw log entries)."""
+    """Get the user's viewing history enriched with movie metadata."""
     rows = list(
         db.scalars(
             select(HistoryItem)
             .where(HistoryItem.user_id == user_id)
             .order_by(desc(HistoryItem.last_watched))
-            .limit(20)
+            .limit(50)
         ).all()
     )
-    return [_serialize(row) for row in rows]
+    results: list[dict[str, Any]] = []
+    for row in rows:
+        data = _serialize(row)
+        movie = get_movie(db, row.imdb_id, with_trailer=False)
+        if movie:
+            data["Poster"] = movie.get("Poster")
+            data["Year"] = movie.get("Year")
+            data["Genre"] = movie.get("Genre")
+            data["imdbRating"] = movie.get("imdbRating")
+        results.append(data)
+    return results
 
 
 @router.get("/continue-watching/{user_id}")

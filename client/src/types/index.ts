@@ -42,6 +42,10 @@ export interface HistoryItem {
     movie_title: string;
     progress: number;
     last_watched: string;
+    Poster?: string;
+    Year?: string;
+    Genre?: string;
+    imdbRating?: string;
 }
 
 // API Response types
