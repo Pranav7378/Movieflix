@@ -226,14 +226,10 @@ const HomePage: React.FC = () => {
                             </div>
                         </div>
 
-                        {/* Right-aligned Badges (Matching Netflix Showcase) */}
+                        {/* Right-aligned Ranking Badge */}
                         <div className="hidden md:flex items-center gap-2.5 absolute bottom-8 sm:bottom-10 right-6 sm:right-10 z-10 pointer-events-none">
-                            <div className="px-3.5 py-1.5 rounded-full bg-black/60 backdrop-blur-md border border-white/15 text-slate-300 text-xs font-medium flex items-center gap-2 shadow-xl">
-                                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                                <span>4K Ultra HD • 5.1 Audio</span>
-                            </div>
-                            <div className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-red-600 to-rose-700 text-white text-xs font-black tracking-wider flex items-center gap-1.5 shadow-xl border border-red-400/30">
-                                <span className="text-[9px] bg-white text-red-600 px-1 py-0.5 rounded font-black tracking-normal">TOP 10</span>
+                            <div className="px-3.5 py-1.5 rounded-full bg-gradient-to-r from-cyan-600/90 to-blue-700/90 text-white text-xs font-black tracking-wider flex items-center gap-1.5 shadow-xl border border-cyan-400/30">
+                                <span className="text-[9px] bg-white text-cyan-800 px-1.5 py-0.5 rounded font-black tracking-normal">FEATURED</span>
                                 <span>#1 in CineCue</span>
                             </div>
                         </div>
